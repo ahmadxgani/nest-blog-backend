@@ -2,13 +2,17 @@ import { Body, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Post, PostDocument } from './post.model';
-import { CreatePostPipe, DeletePostPipe, UpdatePostPipe } from './post.pipe';
+import {
+  CreatePostInput,
+  DeletePostInput,
+  UpdatePostInput,
+} from './post.input';
 
 @Injectable()
 export class PostService {
   constructor(@InjectModel(Post.name) private PostModel: Model<PostDocument>) {}
 
-  create(@Body() payload: CreatePostPipe) {
+  create(@Body() payload: CreatePostInput) {
     const createdPerson = new this.PostModel(payload);
     return createdPerson.save();
   }
@@ -17,13 +21,17 @@ export class PostService {
     return this.PostModel.find({ [key]: value }).exec();
   }
 
-  update(@Body() payload: UpdatePostPipe) {
-    return this.PostModel.findByIdAndUpdate(payload._id, payload, {
-      new: true,
-    }).exec();
+  update(@Body() payload: UpdatePostInput) {
+    return this.PostModel.findByIdAndUpdate(
+      payload._id,
+      JSON.parse(JSON.stringify({ ...payload, _id: undefined })),
+      {
+        new: true,
+      },
+    ).exec();
   }
 
-  delete({ _id }: DeletePostPipe) {
+  delete({ _id }: DeletePostInput) {
     return this.PostModel.findByIdAndDelete(_id).exec();
   }
 }

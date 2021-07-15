@@ -5,31 +5,53 @@
 input CreatePostInput {
   authorId: String!
   content: String!
-  tags: [tags!] = [nocategory]
+  tags: [tags!] = [no_category]
   title: String!
+}
+
+input DeletePostInput {
+  _id: String!
+}
+
+input GetPostInput {
+  by: String!
+  value: String!
 }
 
 type Mutation {
   CreatePost(payload: CreatePostInput!): Post!
+  DeletePost(payload: DeletePostInput!): Post!
+  UpdatePost(payload: UpdatePostInput!): Post!
 }
 
 """Post model"""
 type Post {
   _id: String!
+  authorId: String!
   content: String!
+  createdAt: String!
   likes: Int!
   tags: [tags!]!
   title: String!
+  updatedAt: String!
 }
 
 type Query {
-  ShowAllPost: Post!
+  GetPost(payload: GetPostInput!): [Post!]!
+  ShowAllPost: [Post!]!
+}
+
+input UpdatePostInput {
+  _id: String!
+  content: String
+  tags: [tags!]
+  title: String
 }
 
 enum tags {
   framework
   javascript
-  nocategory
+  no_category
   nodejs
   programming
 }

@@ -12,7 +12,7 @@ export class CreatePostInput {
   @Field()
   content: string;
 
-  @Field(() => [tags], { defaultValue: [tags['nocategory']] })
+  @Field(() => [tags], { defaultValue: [tags['no_category']] })
   tags: tags[];
 
   @Field(() => String)
@@ -20,22 +20,31 @@ export class CreatePostInput {
 }
 
 @InputType()
-export class UpdatePostInput {
+export class GetPostInput {
   @Field()
+  by: string;
+
+  @Field()
+  value: string;
+}
+
+@InputType()
+export class UpdatePostInput {
+  @Field(() => String)
   _id: Types.ObjectId;
 
-  @Field()
-  title: string;
+  @Field({ nullable: true })
+  title?: string;
 
-  @Field()
-  content: string;
+  @Field({ nullable: true })
+  content?: string;
 
-  @Field(() => [tags], { defaultValue: [tags['no-category']] })
-  tags: tags[];
+  @Field(() => [tags], { nullable: true })
+  tags?: tags[];
 }
 
 @InputType()
 export class DeletePostInput {
-  @Field()
-  _id: Types.ObjectId;
+  @Field(() => String)
+  _id: ObjectId;
 }
