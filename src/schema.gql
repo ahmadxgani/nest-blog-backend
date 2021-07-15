@@ -1,0 +1,35 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreatePostInput {
+  authorId: String!
+  content: String!
+  tags: [tags!] = [nocategory]
+  title: String!
+}
+
+type Mutation {
+  CreatePost(payload: CreatePostInput!): Post!
+}
+
+"""Post model"""
+type Post {
+  _id: String!
+  content: String!
+  likes: Int!
+  tags: [tags!]!
+  title: String!
+}
+
+type Query {
+  ShowAllPost: Post!
+}
+
+enum tags {
+  framework
+  javascript
+  nocategory
+  nodejs
+  programming
+}
