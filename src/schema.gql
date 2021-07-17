@@ -54,6 +54,11 @@ input LoginInput {
   password: String!
 }
 
+type LoginType {
+  expiresIn: String!
+  token: String!
+}
+
 type Mutation {
   CreateAuthor(payload: CreateAuthorInput!): Author!
   CreatePost(payload: CreatePostInput!): Post!
@@ -61,7 +66,7 @@ type Mutation {
   DeletePost(payload: DeletePostInput!): Post!
   UpdateAuthor(payload: UpdateAuthorInput!): Author!
   UpdatePost(payload: UpdatePostInput!): Post!
-  login(payload: LoginInput!): Author!
+  login(payload: LoginInput!): LoginType!
 }
 
 """Post model"""

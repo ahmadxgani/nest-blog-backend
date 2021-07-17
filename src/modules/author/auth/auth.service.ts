@@ -12,7 +12,7 @@ export class AuthService {
   ) {}
 
   private _createToken(payload: AuthorDocument) {
-    const token = this.jwtService.sign(payload);
+    const token = this.jwtService.sign(payload.toJSON());
     return {
       expiresIn: process.env.EXPIRES_IN,
       token,

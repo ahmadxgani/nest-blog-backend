@@ -13,6 +13,7 @@ import { Post } from '../post/post.model';
 import { AuthService } from './auth/auth.service';
 import { roles } from 'src/interface/role.interface';
 import { Auth } from './auth/auth.decorator';
+import { LoginType } from 'src/classType/login.classType';
 
 @Resolver(() => Author)
 export class AuthorResolver {
@@ -21,7 +22,7 @@ export class AuthorResolver {
     private authService: AuthService,
   ) {}
 
-  @Mutation(() => Author)
+  @Mutation(() => LoginType)
   async login(@Args('payload') payload: LoginInput) {
     return await this.authService.login(payload);
   }
