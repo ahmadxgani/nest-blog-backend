@@ -11,6 +11,6 @@ import { AuthorService } from './author.service';
     MongooseModule.forFeature([{ name: Author.name, schema: AuthorSchema }]),
   ],
   providers: [AuthorService, AuthorResolver],
-  exports: [AuthorService],
+  exports: [AuthorService, MongooseModule],
 })
 export class AuthorModule {}

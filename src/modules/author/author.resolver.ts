@@ -10,7 +10,7 @@ import { AuthorService } from './author.service';
 import { Parent } from '@nestjs/graphql';
 import { Post } from '../post/post.model';
 import { roles } from 'src/interface/role.interface';
-import { Auth } from '../auth/auth.decorator';
+import { Auth } from '../../decorator/auth.decorator';
 
 @Resolver(() => Author)
 export class AuthorResolver {

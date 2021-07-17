@@ -1,4 +1,4 @@
-import { Body, Injectable } from '@nestjs/common';
+import { Body, Injectable, Req } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Post, PostDocument } from './post.model';
@@ -7,12 +7,16 @@ import {
   DeletePostInput,
   UpdatePostInput,
 } from './post.input';
+import { Author, AuthorDocument } from '../author/author.model';
 
 @Injectable()
 export class PostService {
-  constructor(@InjectModel(Post.name) private PostModel: Model<PostDocument>) {}
+  constructor(
+    @InjectModel(Post.name) private PostModel: Model<PostDocument>,
+    @InjectModel(Author.name) private AuthorModel: Model<AuthorDocument>,
+  ) {}
 
-  create(@Body() payload: CreatePostInput) {
+  create(@Body() payload: CreatePostInput, @Req() req?: any) {
     const createdPerson = new this.PostModel(payload);
     return createdPerson.save();
   }
