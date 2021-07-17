@@ -2,14 +2,45 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""Author model"""
+type Author {
+  _id: String!
+  bookmark: [Post!]!
+  createdAt: DateTime!
+  email: String!
+  password: String!
+  posts: [Post!]!
+  role: roles!
+  updatedAt: DateTime!
+  username: String!
+}
+
+input CreateAuthorInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
 input CreatePostInput {
-  authorId: String!
   content: String!
   tags: [tags!] = [no_category]
   title: String!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input DeleteAuthorInput {
+  _id: String!
+}
+
 input DeletePostInput {
+  _id: String!
+}
+
+input GetAuthorInput {
   _id: String!
 }
 
@@ -18,27 +49,44 @@ input GetPostInput {
   value: String!
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
 type Mutation {
+  CreateAuthor(payload: CreateAuthorInput!): Author!
   CreatePost(payload: CreatePostInput!): Post!
+  DeleteAuthor(payload: DeleteAuthorInput!): Author!
   DeletePost(payload: DeletePostInput!): Post!
+  UpdateAuthor(payload: UpdateAuthorInput!): Author!
   UpdatePost(payload: UpdatePostInput!): Post!
+  login(payload: LoginInput!): Author!
 }
 
 """Post model"""
 type Post {
   _id: String!
-  authorId: String!
   content: String!
-  createdAt: String!
+  createdAt: DateTime!
   likes: Int!
   tags: [tags!]!
   title: String!
-  updatedAt: String!
+  updatedAt: DateTime!
 }
 
 type Query {
+  GetAuthorById(payload: GetAuthorInput!): [Author!]!
   GetPost(payload: GetPostInput!): [Post!]!
+  ShowAllAuthor: [Author!]!
   ShowAllPost: [Post!]!
+}
+
+input UpdateAuthorInput {
+  _id: String!
+  password: String
+  posts: [String!]!
+  username: String
 }
 
 input UpdatePostInput {
@@ -46,6 +94,11 @@ input UpdatePostInput {
   content: String
   tags: [tags!]
   title: String
+}
+
+enum roles {
+  admin
+  member
 }
 
 enum tags {

@@ -5,43 +5,49 @@ import { tags } from 'src/interface/tags.interface';
 registerEnumType(tags, { name: 'tags' });
 
 @InputType()
-export class CreatePostInput {
+export class CreateAuthorInput {
   @Field()
-  title: string;
+  username: string;
 
   @Field()
-  content: string;
+  email: string;
 
-  @Field(() => [tags], { defaultValue: [tags['no_category']] })
-  tags: tags[];
+  @Field()
+  password: string;
 }
 
 @InputType()
-export class GetPostInput {
+export class LoginInput {
   @Field()
-  by: string;
+  email: string;
 
   @Field()
-  value: string;
+  password: string;
 }
 
 @InputType()
-export class UpdatePostInput {
+export class GetAuthorInput {
+  @Field(() => String)
+  _id: ObjectId;
+}
+
+@InputType()
+export class UpdateAuthorInput {
   @Field(() => String)
   _id: Types.ObjectId;
 
   @Field({ nullable: true })
-  title?: string;
+  username?: string;
 
   @Field({ nullable: true })
-  content?: string;
+  password?: string;
 
-  @Field(() => [tags], { nullable: true })
-  tags?: tags[];
+  @Field(() => [String])
+  posts: Types.ObjectId[];
 }
 
 @InputType()
-export class DeletePostInput {
+export class DeleteAuthorInput {
   @Field(() => String)
   _id: ObjectId;
 }

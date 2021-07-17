@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { tags } from 'src/interface/tags.interface';
-import { ObjectId, Types } from 'mongoose';
+import { Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @ObjectType({ description: 'Post model' })
@@ -8,9 +8,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 export class Post {
   @Field(() => String)
   _id: Types.ObjectId;
-
-  @Field(() => String)
-  authorId: ObjectId;
 
   @Field()
   @Prop()
@@ -29,10 +26,10 @@ export class Post {
   likes: number;
 
   @Field()
-  createdAt: string;
+  createdAt: Date;
 
   @Field()
-  updatedAt: string;
+  updatedAt: Date;
 }
 
 export type PostDocument = Post & Document;
