@@ -1,6 +1,6 @@
 import { Args, Resolver, Query, Mutation } from '@nestjs/graphql';
 import { roles } from 'src/interface/role.interface';
-import { Auth } from '../author/auth/auth.decorator';
+import { Auth } from '../auth/auth.decorator';
 import {
   CreatePostInput,
   DeletePostInput,

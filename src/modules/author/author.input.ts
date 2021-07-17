@@ -17,15 +17,6 @@ export class CreateAuthorInput {
 }
 
 @InputType()
-export class LoginInput {
-  @Field()
-  email: string;
-
-  @Field()
-  password: string;
-}
-
-@InputType()
 export class GetAuthorInput {
   @Field(() => String)
   _id: ObjectId;

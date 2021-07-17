@@ -2,7 +2,6 @@ import {
   CreateAuthorInput,
   DeleteAuthorInput,
   GetAuthorInput,
-  LoginInput,
   UpdateAuthorInput,
 } from './author.input';
 import { Args, Mutation, Resolver, Query, ResolveField } from '@nestjs/graphql';
@@ -10,22 +9,12 @@ import { Author, AuthorDocument } from './author.model';
 import { AuthorService } from './author.service';
 import { Parent } from '@nestjs/graphql';
 import { Post } from '../post/post.model';
-import { AuthService } from './auth/auth.service';
 import { roles } from 'src/interface/role.interface';
-import { Auth } from './auth/auth.decorator';
-import { LoginType } from 'src/classType/login.classType';
+import { Auth } from '../auth/auth.decorator';
 
 @Resolver(() => Author)
 export class AuthorResolver {
-  constructor(
-    private authorService: AuthorService,
-    private authService: AuthService,
-  ) {}
-
-  @Mutation(() => LoginType)
-  async login(@Args('payload') payload: LoginInput) {
-    return await this.authService.login(payload);
-  }
+  constructor(private authorService: AuthorService) {}
 
   @Mutation(() => Author)
   async CreateAuthor(@Args('payload') payload: CreateAuthorInput) {
