@@ -33,11 +33,13 @@ export class AuthorResolver {
   }
 
   @Mutation(() => Author)
+  @Auth(roles.admin, roles.member)
   async UpdateAuthor(@Args('payload') payload: UpdateAuthorInput) {
     return await this.authorService.update(payload);
   }
 
   @Mutation(() => Author)
+  @Auth(roles.admin, roles.member)
   async DeleteAuthor(@Args('payload') payload: DeleteAuthorInput) {
     return await this.authorService.delete(payload);
   }

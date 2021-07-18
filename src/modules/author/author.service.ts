@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
@@ -29,15 +29,8 @@ export class AuthorService {
   }
 
   update(payload: UpdateAuthorInput) {
-    const password = bcrypt.genSalt(10, (err, salt) => {
-      if (err)
-        throw new HttpException('invalid payload', HttpStatus.BAD_REQUEST);
-      return bcrypt.hash(payload.password, salt, (err, hash) => {
-        if (err)
-          throw new HttpException('invalid payload', HttpStatus.BAD_REQUEST);
-        return hash;
-      });
-    });
+    const salt = bcrypt.genSaltSync();
+    const password = bcrypt.hashSync(payload.password, salt);
     return this.AuthorModel.findByIdAndUpdate(
       payload._id,
       JSON.parse(JSON.stringify({ ...payload, password, _id: undefined })),
