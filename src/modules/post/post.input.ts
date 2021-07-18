@@ -12,6 +12,9 @@ export class CreatePostInput {
   @Field()
   content: string;
 
+  @Field({ nullable: true })
+  slug?: string;
+
   @Field(() => [tags], { defaultValue: [tags['no_category']] })
   tags: tags[];
 }
@@ -35,6 +38,9 @@ export class UpdatePostInput {
 
   @Field()
   content: string;
+
+  @Field({ nullable: true })
+  slug?: string;
 
   @Field(() => [tags])
   tags: tags[];

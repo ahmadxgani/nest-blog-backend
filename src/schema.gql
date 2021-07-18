@@ -23,6 +23,7 @@ input CreateAuthorInput {
 
 input CreatePostInput {
   content: String!
+  slug: String
   tags: [tags!] = [no_category]
   title: String!
 }
@@ -75,6 +76,7 @@ type Post {
   content: String!
   createdAt: DateTime!
   likes: Int!
+  slug: String!
   tags: [tags!]!
   title: String!
   updatedAt: DateTime!
@@ -97,6 +99,7 @@ input UpdateAuthorInput {
 input UpdatePostInput {
   _id: String!
   content: String!
+  slug: String
   tags: [tags!]!
   title: String!
 }

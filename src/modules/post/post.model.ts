@@ -17,6 +17,10 @@ export class Post {
   @Prop()
   content: string;
 
+  @Field()
+  @Prop()
+  slug: string;
+
   @Field(() => [tags], { defaultValue: [tags['no_category']] })
   @Prop()
   tags: tags[];
@@ -35,3 +39,10 @@ export class Post {
 export type PostDocument = Post & Document;
 
 export const PostSchema = SchemaFactory.createForClass(Post);
+
+// PostSchema.pre<PostDocument>('save', function (next) {
+//   if (!this.slug) {
+//     this.slug = Slugify(this.title);
+//   }
+//   next();
+// });
