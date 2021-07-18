@@ -3,6 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, Types } from 'mongoose';
 import { roles } from 'src/interface/role.interface';
 import { Post } from '../post/post.model';
+import bcrypt from 'bcrypt';
 
 registerEnumType(roles, { name: 'roles' });
 
@@ -13,7 +14,7 @@ export class Author {
   _id: Types.ObjectId;
 
   @Field()
-  @Prop()
+  @Prop({ unique: true })
   username: string;
 
   @Field(() => roles)
@@ -21,7 +22,7 @@ export class Author {
   role: roles;
 
   @Field()
-  @Prop()
+  @Prop({ unique: true })
   email: string;
 
   @Field()
@@ -54,3 +55,14 @@ export class Author {
 export type AuthorDocument = Author & Document;
 
 export const AuthorSchema = SchemaFactory.createForClass(Author);
+
+AuthorSchema.pre<AuthorDocument>('save', function (next) {
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) return next(err);
+    bcrypt.hash(this.password, salt, (err, hash) => {
+      if (err) return next(err);
+      this.password = hash;
+      next();
+    });
+  });
+});

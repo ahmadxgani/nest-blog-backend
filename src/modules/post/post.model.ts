@@ -10,7 +10,7 @@ export class Post {
   _id: Types.ObjectId;
 
   @Field()
-  @Prop()
+  @Prop({ unique: true })
   title: string;
 
   @Field()
