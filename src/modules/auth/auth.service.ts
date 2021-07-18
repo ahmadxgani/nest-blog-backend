@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 import { AuthorDocument } from '../author/author.model';
 import { AuthorService } from '../author/author.service';
 import { LoginInput } from './auth.input';
@@ -30,6 +31,9 @@ export class AuthService {
         'the author with that email was not found',
         HttpStatus.NOT_FOUND,
       );
+    const match = await bcrypt.compare(payload.password, author.password);
+    if (!match)
+      throw new HttpException('wrong password', HttpStatus.UNAUTHORIZED);
     return this._createToken(author as unknown as AuthorDocument);
   }
 }
