@@ -27,11 +27,11 @@ export class UpdateAuthorInput {
   @Field(() => String)
   _id: Types.ObjectId;
 
-  @Field({ nullable: true })
-  username?: string;
+  @Field()
+  username: string;
 
-  @Field({ nullable: true })
-  password?: string;
+  @Field()
+  password: string;
 
   @Field(() => [String])
   posts: Types.ObjectId[];

@@ -89,9 +89,9 @@ type Query {
 
 input UpdateAuthorInput {
   _id: String!
-  password: String
+  password: String!
   posts: [String!]!
-  username: String
+  username: String!
 }
 
 input UpdatePostInput {
