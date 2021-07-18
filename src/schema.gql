@@ -96,9 +96,9 @@ input UpdateAuthorInput {
 
 input UpdatePostInput {
   _id: String!
-  content: String
-  tags: [tags!]
-  title: String
+  content: String!
+  tags: [tags!]!
+  title: String!
 }
 
 enum roles {

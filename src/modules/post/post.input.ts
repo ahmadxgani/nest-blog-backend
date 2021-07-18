@@ -30,14 +30,14 @@ export class UpdatePostInput {
   @Field(() => String)
   _id: Types.ObjectId;
 
-  @Field({ nullable: true })
-  title?: string;
+  @Field()
+  title: string;
 
-  @Field({ nullable: true })
-  content?: string;
+  @Field()
+  content: string;
 
-  @Field(() => [tags], { nullable: true })
-  tags?: tags[];
+  @Field(() => [tags])
+  tags: tags[];
 }
 
 @InputType()
