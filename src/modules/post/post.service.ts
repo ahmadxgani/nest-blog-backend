@@ -1,6 +1,6 @@
-import { Body, Injectable, Req } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { Post, PostDocument } from './post.model';
 import {
   CreatePostInput,
@@ -16,16 +16,19 @@ export class PostService {
     @InjectModel(Author.name) private AuthorModel: Model<AuthorDocument>,
   ) {}
 
-  create(@Body() payload: CreatePostInput, @Req() req?: any) {
-    const createdPerson = new this.PostModel(payload);
-    return createdPerson.save();
+  create(payload: CreatePostInput, _id: ObjectId) {
+    const createdPost = new this.PostModel(payload);
+    this.AuthorModel.findByIdAndUpdate(_id, {
+      $push: { posts: createdPost._id },
+    }).exec();
+    return createdPost.save();
   }
 
   read<T>(key?: string, value?: T | any) {
     return this.PostModel.find({ [key]: value }).exec();
   }
 
-  update(@Body() payload: UpdatePostInput) {
+  update(payload: UpdatePostInput) {
     return this.PostModel.findByIdAndUpdate(
       payload._id,
       JSON.parse(JSON.stringify({ ...payload, _id: undefined })),

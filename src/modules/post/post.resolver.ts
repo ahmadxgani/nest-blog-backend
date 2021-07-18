@@ -1,6 +1,8 @@
 import { Args, Resolver, Query, Mutation } from '@nestjs/graphql';
+import { Author } from 'src/decorator/author.decorator';
 import { roles } from 'src/interface/role.interface';
 import { Auth } from '../../decorator/auth.decorator';
+import { AuthorDocument } from '../author/author.model';
 import {
   CreatePostInput,
   DeletePostInput,
@@ -26,8 +28,11 @@ export class PostResolver {
 
   @Mutation(() => Post)
   @Auth(roles.member, roles.admin)
-  async CreatePost(@Args('payload') payload: CreatePostInput) {
-    return await this.postService.create(payload);
+  async CreatePost(
+    @Args('payload') payload: CreatePostInput,
+    @Author() author: AuthorDocument,
+  ) {
+    return await this.postService.create(payload, author._id);
   }
 
   @Mutation(() => Post)

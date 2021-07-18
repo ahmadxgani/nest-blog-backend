@@ -1,4 +1,4 @@
-import { Body, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Author, AuthorDocument } from './author.model';
@@ -14,7 +14,7 @@ export class AuthorService {
     @InjectModel(Author.name) private AuthorModel: Model<AuthorDocument>,
   ) {}
 
-  create(@Body() payload: CreateAuthorInput) {
+  create(payload: CreateAuthorInput) {
     const createdPerson = new this.AuthorModel(payload);
     return createdPerson.save();
   }
@@ -27,7 +27,7 @@ export class AuthorService {
     return this.AuthorModel.findOne({ [key]: value }).exec();
   }
 
-  update(@Body() payload: UpdateAuthorInput) {
+  update(payload: UpdateAuthorInput) {
     return this.AuthorModel.findByIdAndUpdate(
       payload._id,
       JSON.parse(JSON.stringify({ ...payload, _id: undefined })),
