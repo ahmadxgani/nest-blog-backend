@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, Types } from 'mongoose';
 import { roles } from 'src/interface/role.interface';
 import { Post } from '../post/post.model';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 registerEnumType(roles, { name: 'roles' });
 
