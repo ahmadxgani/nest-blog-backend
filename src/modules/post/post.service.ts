@@ -38,7 +38,17 @@ export class PostService {
     ).exec();
   }
 
-  delete({ _id }: DeletePostInput) {
-    return this.PostModel.findByIdAndDelete(_id).exec();
+  async delete(payload: DeletePostInput, _id: ObjectId) {
+    const test = await (
+      await this.AuthorModel.findByIdAndUpdate(
+        _id,
+        {
+          $pull: { posts: payload._id },
+        },
+        { new: true },
+      ).exec()
+    ).save();
+    console.log(test.posts);
+    return this.PostModel.findByIdAndDelete(payload._id).exec();
   }
 }

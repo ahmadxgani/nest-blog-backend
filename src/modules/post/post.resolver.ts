@@ -37,7 +37,7 @@ export class PostResolver {
     return await this.postService.create(
       {
         ...payload,
-        slug: payload.slug ? Slugify(payload.title) : undefined,
+        slug: payload.slug ? payload.slug : Slugify(payload.title),
       },
       author._id,
     );
@@ -51,13 +51,16 @@ export class PostResolver {
   ) {
     return await this.postService.update({
       ...payload,
-      slug: payload.slug ? Slugify(payload.title) : undefined,
+      slug: payload.slug ? payload.slug : Slugify(payload.title),
     });
   }
 
   @Mutation(() => Post)
   @Auth(roles.member, roles.admin)
-  async DeletePost(@Args('payload') payload: DeletePostInput) {
-    return await this.postService.delete(payload);
+  async DeletePost(
+    @Args('payload') payload: DeletePostInput,
+    @Author() author: AuthorDocument,
+  ) {
+    return await this.postService.delete(payload, author._id);
   }
 }

@@ -37,14 +37,6 @@ export class Author {
   @Prop({ type: [Types.ObjectId], ref: Post.name, default: [] })
   posts: ObjectId[];
 
-  //   @Field()
-  //   @Prop()
-  //   follower: string;
-
-  //   @Field()
-  //   @Prop()
-  //   following: string;
-
   @Field()
   createdAt: Date;
 

@@ -39,10 +39,3 @@ export class Post {
 export type PostDocument = Post & Document;
 
 export const PostSchema = SchemaFactory.createForClass(Post);
-
-// PostSchema.pre<PostDocument>('save', function (next) {
-//   if (!this.slug) {
-//     this.slug = Slugify(this.title);
-//   }
-//   next();
-// });

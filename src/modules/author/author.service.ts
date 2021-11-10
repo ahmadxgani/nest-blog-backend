@@ -8,11 +8,13 @@ import {
   DeleteAuthorInput,
   UpdateAuthorInput,
 } from './author.input';
+import { Post, PostDocument } from '../post/post.model';
 
 @Injectable()
 export class AuthorService {
   constructor(
     @InjectModel(Author.name) private AuthorModel: Model<AuthorDocument>,
+    @InjectModel(Post.name) private PostModel: Model<PostDocument>,
   ) {}
 
   create(payload: CreateAuthorInput) {
@@ -20,7 +22,8 @@ export class AuthorService {
     return createdPerson.save();
   }
 
-  readAll() {
+  async readAll() {
+    console.log(await this.AuthorModel.find().exec());
     return this.AuthorModel.find().exec();
   }
 
