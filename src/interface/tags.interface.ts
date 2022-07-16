@@ -3,5 +3,5 @@ export enum tags {
   framework,
   javascript,
   nodejs,
-  'no_category',
+  no_category,
 }

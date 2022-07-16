@@ -14,7 +14,7 @@ import { AuthModule } from './modules/auth/auth.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       debug: false,
-      playground: false,
+      playground: true,
     }),
     MongooseModule.forRoot(process.env.MONGO_URI, {
       autoCreate: true,
