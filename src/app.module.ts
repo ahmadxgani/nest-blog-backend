@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostModule } from './modules/post/post.module';
 import { AuthorModule } from './modules/author/author.module';
 import { ConfigModule } from '@nestjs/config';
+import { Post } from './modules/post/post.model';
 import { join } from 'path';
 import { AuthModule } from './modules/auth/auth.module';
 
@@ -16,10 +17,15 @@ import { AuthModule } from './modules/auth/auth.module';
       debug: false,
       playground: true,
     }),
-    MongooseModule.forRoot(process.env.MONGO_URI, {
-      autoCreate: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: '',
+      database: process.env.DB,
+      entities: [Post],
+      synchronize: true,
     }),
     PostModule,
     AuthorModule,

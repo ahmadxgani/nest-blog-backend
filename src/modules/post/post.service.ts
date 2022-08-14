@@ -1,54 +1,39 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
-import { Post, PostDocument } from './post.model';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Post } from './post.model';
 import {
   CreatePostInput,
   DeletePostInput,
   UpdatePostInput,
 } from './post.input';
-import { Author, AuthorDocument } from '../author/author.model';
+import { Author } from '../author/author.model';
 
 @Injectable()
 export class PostService {
   constructor(
-    @InjectModel(Post.name) private PostModel: Model<PostDocument>,
-    @InjectModel(Author.name) private AuthorModel: Model<AuthorDocument>,
+    @InjectRepository(Post) private PostModel: Repository<Post>,
+    @InjectRepository(Author) private AuthorModel: Repository<Author>,
   ) {}
 
-  create(payload: CreatePostInput, _id: ObjectId) {
-    const createdPost = new this.PostModel(payload);
-    this.AuthorModel.findByIdAndUpdate(_id, {
-      $push: { posts: createdPost._id },
-    }).exec();
-    return createdPost.save();
+  getAll() {
+    return this.PostModel.find();
   }
 
-  read<T>(key?: string, value?: T | any) {
-    return this.PostModel.find({ [key]: value }).exec();
+  create(payload: CreatePostInput) {
+    return this.PostModel.insert(payload);
+    // return PostModel.save();
   }
 
-  update(payload: UpdatePostInput) {
-    return this.PostModel.findByIdAndUpdate(
-      payload._id,
-      JSON.parse(JSON.stringify({ ...payload, _id: undefined })),
-      {
-        new: true,
-      },
-    ).exec();
+  read<T>(key: string, value?: T | any) {
+    return this.PostModel.findOneBy({ [key]: value });
   }
 
-  async delete(payload: DeletePostInput, _id: ObjectId) {
-    const test = await (
-      await this.AuthorModel.findByIdAndUpdate(
-        _id,
-        {
-          $pull: { posts: payload._id },
-        },
-        { new: true },
-      ).exec()
-    ).save();
-    console.log(test.posts);
-    return this.PostModel.findByIdAndDelete(payload._id).exec();
+  async update(payload: UpdatePostInput) {
+    return await this.PostModel.update({ id: payload._id }, payload);
+  }
+
+  async delete(payload: DeletePostInput) {
+    return await this.PostModel.delete(payload._id);
   }
 }

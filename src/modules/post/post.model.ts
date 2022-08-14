@@ -1,32 +1,31 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { tags } from 'src/interface/tags.interface';
-import { Types } from 'mongoose';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType({ description: 'Post model' })
-@Schema({ timestamps: true })
+@Entity()
 export class Post {
-  @Field(() => String)
-  _id: Types.ObjectId;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Field()
-  @Prop({ unique: true })
+  @Column({ unique: true })
   title: string;
 
   @Field()
-  @Prop()
+  @Column()
   content: string;
 
   @Field()
-  @Prop()
+  @Column()
   slug: string;
 
   @Field(() => [tags], { defaultValue: [tags['no_category']] })
-  @Prop()
+  @Column()
   tags: tags[];
 
   @Field(() => Int)
-  @Prop()
+  @Column()
   likes: number;
 
   @Field()
@@ -35,7 +34,3 @@ export class Post {
   @Field()
   updatedAt: Date;
 }
-
-export type PostDocument = Post & Document;
-
-export const PostSchema = SchemaFactory.createForClass(Post);
