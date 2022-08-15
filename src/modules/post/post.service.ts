@@ -30,10 +30,10 @@ export class PostService {
   }
 
   async update(payload: UpdatePostInput) {
-    return await this.PostModel.update({ id: payload._id }, payload);
+    return await this.PostModel.update({ id: payload.id }, payload);
   }
 
   async delete(payload: DeletePostInput) {
-    return await this.PostModel.delete(payload._id);
+    return await this.PostModel.delete(payload.id);
   }
 }

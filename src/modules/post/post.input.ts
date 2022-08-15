@@ -1,5 +1,4 @@
 import { Field, InputType, registerEnumType } from '@nestjs/graphql';
-import { ObjectId, Types } from 'mongoose';
 import { tags } from 'src/interface/tags.interface';
 
 registerEnumType(tags, { name: 'tags' });
@@ -30,8 +29,8 @@ export class GetPostInput {
 
 @InputType()
 export class UpdatePostInput {
-  @Field(() => String)
-  _id: Types.ObjectId;
+  @Field()
+  id: number;
 
   @Field()
   title: string;
@@ -48,6 +47,6 @@ export class UpdatePostInput {
 
 @InputType()
 export class DeletePostInput {
-  @Field(() => String)
-  _id: ObjectId;
+  @Field()
+  id: number;
 }

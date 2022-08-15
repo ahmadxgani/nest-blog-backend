@@ -1,4 +1,4 @@
-export function Slugify(title) {
+export function Slugify(title: string) {
   return title
     .toString()
     .toLowerCase()

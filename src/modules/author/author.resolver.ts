@@ -23,7 +23,7 @@ export class AuthorResolver {
 
   @Query(() => [Author])
   async GetAuthorById(@Args('payload') payload: GetAuthorInput) {
-    return await this.authorService.read('_id', payload._id);
+    return await this.authorService.read('id', payload.id);
   }
 
   @Query(() => [Author])
