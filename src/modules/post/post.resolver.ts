@@ -1,9 +1,7 @@
 import { Args, Resolver, Query, Mutation } from '@nestjs/graphql';
-import { Author } from 'src/decorator/author.decorator';
 import { roles } from 'src/interface/role.interface';
 import { Slugify } from 'src/util/utilities';
 import { Auth } from '../../decorator/auth.decorator';
-import { AuthorDocument } from '../author/author.model';
 import {
   CreatePostInput,
   DeletePostInput,
@@ -19,7 +17,7 @@ export class PostResolver {
 
   @Query(() => [Post])
   async ShowAllPost() {
-    return await this.postService.read();
+    return await this.postService.getAll();
   }
 
   @Query(() => [Post])
@@ -32,14 +30,12 @@ export class PostResolver {
   async CreatePost(
     @Args('payload')
     payload: CreatePostInput,
-    @Author() author: AuthorDocument,
   ) {
     return await this.postService.create(
       {
         ...payload,
         slug: payload.slug ? payload.slug : Slugify(payload.title),
-      },
-      author._id,
+      }
     );
   }
 
@@ -59,8 +55,7 @@ export class PostResolver {
   @Auth(roles.member, roles.admin)
   async DeletePost(
     @Args('payload') payload: DeletePostInput,
-    @Author() author: AuthorDocument,
   ) {
-    return await this.postService.delete(payload, author._id);
+    return await this.postService.delete(payload);
   }
 }

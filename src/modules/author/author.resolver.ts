@@ -5,10 +5,9 @@ import {
   UpdateAuthorInput,
 } from './author.input';
 import { Args, Mutation, Resolver, Query, ResolveField } from '@nestjs/graphql';
-import { Author, AuthorDocument } from './author.model';
+import { Author } from './author.model';
 import { AuthorService } from './author.service';
 import { Parent } from '@nestjs/graphql';
-import { Post } from '../post/post.model';
 import { roles } from 'src/interface/role.interface';
 import { Auth } from '../../decorator/auth.decorator';
 
@@ -23,7 +22,7 @@ export class AuthorResolver {
 
   @Query(() => [Author])
   async GetAuthorById(@Args('payload') payload: GetAuthorInput) {
-    return await this.authorService.read('_id', payload._id);
+    return await this.authorService.read('id', payload.id);
   }
 
   @Query(() => [Author])
@@ -45,8 +44,8 @@ export class AuthorResolver {
   }
 
   @ResolveField()
-  async posts(@Parent() author: AuthorDocument) {
-    await author.populate({ path: 'posts', model: Post.name }).execPopulate();
+  async posts(@Parent() author: Author) {
+    // await author.populate({ path: 'posts', model: Post.name }).execPopulate(); pending: relasi
     return author.posts;
   }
 }
