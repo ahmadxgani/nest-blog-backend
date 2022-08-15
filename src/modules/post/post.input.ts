@@ -1,7 +1,4 @@
-import { Field, InputType, registerEnumType } from '@nestjs/graphql';
-import { tags } from 'src/interface/tags.interface';
-
-registerEnumType(tags, { name: 'tags' });
+import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreatePostInput {
@@ -14,8 +11,8 @@ export class CreatePostInput {
   @Field({ nullable: true })
   slug?: string;
 
-  @Field(() => [tags], { defaultValue: [tags['no_category']] })
-  tags: tags[];
+  @Field()
+  tags: string[];
 }
 
 @InputType()
@@ -41,8 +38,8 @@ export class UpdatePostInput {
   @Field({ nullable: true })
   slug?: string;
 
-  @Field(() => [tags])
-  tags: tags[];
+  @Field()
+  tags: string[];
 }
 
 @InputType()

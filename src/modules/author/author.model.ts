@@ -1,60 +1,42 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId, Types } from 'mongoose';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { roles } from 'src/interface/role.interface';
 import { Post } from '../post/post.model';
-import * as bcrypt from 'bcrypt';
 
 registerEnumType(roles, { name: 'roles' });
 
 @ObjectType({ description: 'Author model' })
-@Schema({ timestamps: true })
+@Entity()
 export class Author {
-  @Field(() => String)
-  _id: Types.ObjectId;
+  @Field()
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Field()
-  @Prop({ unique: true })
+  @Column({ unique: true })
   username: string;
 
   @Field(() => roles)
-  @Prop({ default: roles.member })
+  @Column({ default: roles.member })
   role: roles;
 
   @Field()
-  @Prop({ unique: true })
+  @Column({ unique: true })
   email: string;
 
   @Field()
-  @Prop()
+  @Column()
   password: string;
 
   @Field(() => [Post])
-  @Prop({ type: [Types.ObjectId], ref: Post.name, default: [] })
-  bookmark: ObjectId[];
-
-  @Field(() => [Post])
-  @Prop({ type: [Types.ObjectId], ref: Post.name, default: [] })
-  posts: ObjectId[];
+  @Column()
+  posts: Post[]; // pending: relasi
 
   @Field()
+  @Column({ type: 'timestamptz' })
   createdAt: Date;
 
   @Field()
+  @Column({ type: 'timestamptz' })
   updatedAt: Date;
 }
-
-export type AuthorDocument = Author & Document;
-
-export const AuthorSchema = SchemaFactory.createForClass(Author);
-
-AuthorSchema.pre<AuthorDocument>('save', function (next) {
-  bcrypt.genSalt(10, (err, salt) => {
-    if (err) return next(err);
-    bcrypt.hash(this.password, salt, (err, hash) => {
-      if (err) return next(err);
-      this.password = hash;
-      next();
-    });
-  });
-});

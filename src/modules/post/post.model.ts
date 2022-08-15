@@ -1,5 +1,4 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { tags } from 'src/interface/tags.interface';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType({ description: 'Post model' })
@@ -20,9 +19,9 @@ export class Post {
   @Column()
   slug: string;
 
-  @Field(() => [tags], { defaultValue: [tags['no_category']] })
+  @Field()
   @Column()
-  tags: tags[];
+  tags: string[];
 
   @Field(() => Int)
   @Column()

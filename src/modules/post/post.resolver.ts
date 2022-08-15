@@ -1,5 +1,4 @@
 import { Args, Resolver, Query, Mutation } from '@nestjs/graphql';
-import { Author } from 'src/decorator/author.decorator';
 import { roles } from 'src/interface/role.interface';
 import { Slugify } from 'src/util/utilities';
 import { Auth } from '../../decorator/auth.decorator';
@@ -33,12 +32,10 @@ export class PostResolver {
     payload: CreatePostInput,
     // @Author() author: AuthorDocument,
   ) {
-    return await this.postService.create(
-      {
-        ...payload,
-        slug: payload.slug ? payload.slug : Slugify(payload.title),
-      }
-    );
+    return await this.postService.create({
+      ...payload,
+      slug: payload.slug ? payload.slug : Slugify(payload.title),
+    });
   }
 
   @Mutation(() => Post)

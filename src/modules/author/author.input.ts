@@ -1,4 +1,8 @@
 import { Field, InputType, registerEnumType } from '@nestjs/graphql';
+import { tags } from 'src/interface/tags.interface';
+import { Post } from '../post/post.model';
+
+registerEnumType(tags, { name: 'tags' });
 
 @InputType()
 export class CreateAuthorInput {
@@ -30,7 +34,7 @@ export class UpdateAuthorInput {
   password: string;
 
   @Field(() => [String])
-  posts: number[];
+  posts: Post[];
 }
 
 @InputType()

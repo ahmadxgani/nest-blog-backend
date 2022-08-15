@@ -1,49 +1,42 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { Author, AuthorDocument } from './author.model';
+import { Author } from './author.model';
+import { Repository } from 'typeorm';
 import {
   CreateAuthorInput,
   DeleteAuthorInput,
   UpdateAuthorInput,
 } from './author.input';
-import { Post, PostDocument } from '../post/post.model';
 
 @Injectable()
 export class AuthorService {
   constructor(
-    @InjectModel(Author.name) private AuthorModel: Model<AuthorDocument>,
-    @InjectModel(Post.name) private PostModel: Model<PostDocument>,
+    @InjectRepository(Author) private AuthorModel: Repository<Author>,
   ) {}
 
   create(payload: CreateAuthorInput) {
-    const createdPerson = new this.AuthorModel(payload);
-    return createdPerson.save();
+    const salt = bcrypt.genSaltSync();
+    const password = bcrypt.hashSync(payload.password, salt);
+    return this.AuthorModel.insert({ ...payload, password });
   }
 
   async readAll() {
-    console.log(await this.AuthorModel.find().exec());
-    return this.AuthorModel.find().exec();
+    console.log(await this.AuthorModel.find());
+    return this.AuthorModel.find();
   }
 
-  read<T>(key?: string, value?: T | any) {
-    return this.AuthorModel.findOne({ [key]: value }).exec();
+  read<T>(key: string, value?: T | any) {
+    return this.AuthorModel.findOne({ [key]: value });
   }
 
   update(payload: UpdateAuthorInput) {
     const salt = bcrypt.genSaltSync();
     const password = bcrypt.hashSync(payload.password, salt);
-    return this.AuthorModel.findByIdAndUpdate(
-      payload._id,
-      JSON.parse(JSON.stringify({ ...payload, password, _id: undefined })),
-      {
-        new: true,
-      },
-    ).exec();
+    return this.AuthorModel.update(payload.id, { ...payload, password });
   }
 
-  delete({ _id }: DeleteAuthorInput) {
-    return this.AuthorModel.findByIdAndDelete(_id).exec();
+  delete({ id }: DeleteAuthorInput) {
+    return this.AuthorModel.delete(id);
   }
 }
