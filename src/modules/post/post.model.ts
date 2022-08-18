@@ -1,5 +1,11 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @ObjectType({ description: 'Post model' })
 @Entity()
@@ -15,21 +21,29 @@ export class Post {
   @Column()
   content: string;
 
-  @Field()
   @Column()
-  slug: string;
+  author: number;
 
   @Field()
   @Column()
-  tags: string[];
+  slug: string;
 
   @Field(() => Int)
   @Column()
   likes: number;
 
   @Field()
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
   createdAt: Date;
 
   @Field()
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
   updatedAt: Date;
 }

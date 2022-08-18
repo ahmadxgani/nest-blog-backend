@@ -7,15 +7,20 @@ import { ConfigModule } from '@nestjs/config';
 import { Post } from './modules/post/post.model';
 import { join } from 'path';
 import { AuthModule } from './modules/auth/auth.module';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { Author } from './modules/author/author.model';
+import { Tag } from './modules/post/tag.model';
+import { Post_Tag } from './modules/post/post_tag.model';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       debug: false,
       playground: true,
+      driver: ApolloDriver,
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -24,7 +29,7 @@ import { AuthModule } from './modules/auth/auth.module';
       username: 'root',
       password: '',
       database: process.env.DB,
-      entities: [Post],
+      entities: [Post, Author, Tag, Post_Tag],
       synchronize: true,
     }),
     PostModule,
