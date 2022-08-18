@@ -1,8 +1,5 @@
-import { Field, InputType, registerEnumType } from '@nestjs/graphql';
-import { tags } from 'src/interface/tags.interface';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import { Post } from '../post/post.model';
-
-registerEnumType(tags, { name: 'tags' });
 
 @InputType()
 export class CreateAuthorInput {
@@ -18,13 +15,13 @@ export class CreateAuthorInput {
 
 @InputType()
 export class GetAuthorInput {
-  @Field(() => String)
+  @Field(() => Int)
   id: number;
 }
 
 @InputType()
 export class UpdateAuthorInput {
-  @Field(() => String)
+  @Field(() => Int)
   id: number;
 
   @Field()
@@ -39,6 +36,6 @@ export class UpdateAuthorInput {
 
 @InputType()
 export class DeleteAuthorInput {
-  @Field(() => String)
+  @Field(() => Int)
   id: number;
 }

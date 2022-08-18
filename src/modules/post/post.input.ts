@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { Tag } from './tag.model';
 
 @InputType()
 export class CreatePostInput {
@@ -11,8 +12,8 @@ export class CreatePostInput {
   @Field({ nullable: true })
   slug?: string;
 
-  @Field()
-  tags: string[];
+  @Field(() => [String])
+  tags: Tag[];
 }
 
 @InputType()
@@ -38,8 +39,8 @@ export class UpdatePostInput {
   @Field({ nullable: true })
   slug?: string;
 
-  @Field()
-  tags: string[];
+  @Field(() => [String])
+  tags: Tag[];
 }
 
 @InputType()
