@@ -33,7 +33,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 input DeleteAuthorInput {
+<<<<<<< HEAD
   id: String!
+=======
+  id: Float!
+>>>>>>> b6eaa0dffba905b076345989f773c26db90f9757
 }
 
 input DeletePostInput {
@@ -41,7 +45,11 @@ input DeletePostInput {
 }
 
 input GetAuthorInput {
+<<<<<<< HEAD
   id: String!
+=======
+  id: Float!
+>>>>>>> b6eaa0dffba905b076345989f773c26db90f9757
 }
 
 input GetPostInput {
@@ -75,7 +83,10 @@ type Post {
   createdAt: DateTime!
   likes: Int!
   slug: String!
+<<<<<<< HEAD
   tags: [String!]!
+=======
+>>>>>>> b6eaa0dffba905b076345989f773c26db90f9757
   title: String!
   updatedAt: DateTime!
 }
@@ -88,7 +99,11 @@ type Query {
 }
 
 input UpdateAuthorInput {
+<<<<<<< HEAD
   id: String!
+=======
+  id: Float!
+>>>>>>> b6eaa0dffba905b076345989f773c26db90f9757
   password: String!
   posts: [String!]!
   username: String!

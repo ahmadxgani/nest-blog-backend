@@ -8,7 +8,6 @@ import {
   DeleteAuthorInput,
   UpdateAuthorInput,
 } from './author.input';
-import { roles } from 'src/interface/role.interface';
 
 @Injectable()
 export class AuthorService {
@@ -20,20 +19,18 @@ export class AuthorService {
     const salt = await bcrypt.genSalt();
     const password = await bcrypt.hash(payload.password, salt);
     const author = new Author();
-    author.username = payload.username;
     author.email = payload.email;
     author.password = password;
-    author.posts = [];
-    author.role = roles.member;
+    author.username = payload.username;
     return this.AuthorModel.save(author);
   }
 
-  async readAll() {
-    return await this.AuthorModel.find();
+  readAll() {
+    return this.AuthorModel.find();
   }
 
-  read<T>(key: string, value: T | any) {
-    return this.AuthorModel.findBy({ [key]: value });
+  read<T>(key: string, value: T) {
+    return this.AuthorModel.findOneBy({ [key]: value });
   }
 
   async update(payload: UpdateAuthorInput) {

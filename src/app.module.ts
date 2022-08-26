@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostModule } from './modules/post/post.module';
 import { AuthorModule } from './modules/author/author.module';
@@ -8,8 +7,10 @@ import { ConfigModule } from '@nestjs/config';
 import { Post } from './modules/post/post.model';
 import { join } from 'path';
 import { AuthModule } from './modules/auth/auth.module';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Author } from './modules/author/author.model';
-import { Tag } from './modules/post/tags.model';
+import { Tag } from './modules/post/tag.model';
+import { Post_Tag } from './modules/post/post_tag.model';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { Tag } from './modules/post/tags.model';
       sortSchema: true,
       debug: false,
       playground: true,
+      driver: ApolloDriver,
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',

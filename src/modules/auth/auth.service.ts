@@ -13,15 +13,15 @@ export class AuthService {
   ) {}
 
   private _createToken(payload: Author) {
-    const token = this.jwtService.sign(payload);
+    const token = this.jwtService.sign({ ...payload });
     return {
       expiresIn: process.env.EXPIRES_IN,
       token,
     };
   }
 
-  async validate(id: number) {
-    return await this.authorService.read('id', id);
+  validate(payload: Author) {
+    return this.authorService.read('id', payload.id);
   }
 
   async login(payload: LoginInput) {
