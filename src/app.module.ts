@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostModule } from './modules/post/post.module';
 import { AuthorModule } from './modules/author/author.module';
@@ -7,11 +8,14 @@ import { ConfigModule } from '@nestjs/config';
 import { Post } from './modules/post/post.model';
 import { join } from 'path';
 import { AuthModule } from './modules/auth/auth.module';
+import { Author } from './modules/author/author.model';
+import { Tag } from './modules/post/tags.model';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       debug: false,
@@ -24,7 +28,7 @@ import { AuthModule } from './modules/auth/auth.module';
       username: 'root',
       password: '',
       database: process.env.DB,
-      entities: [Post],
+      autoLoadEntities: true,
       synchronize: true,
     }),
     PostModule,

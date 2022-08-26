@@ -4,7 +4,7 @@ import { PostModule } from '../post/post.module';
 import { Author } from './author.model';
 import { AuthorResolver } from './author.resolver';
 import { AuthorService } from './author.service';
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [

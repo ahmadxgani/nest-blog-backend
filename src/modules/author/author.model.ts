@@ -1,5 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { roles } from 'src/interface/role.interface';
 import { Post } from '../post/post.model';
 
@@ -29,14 +29,14 @@ export class Author {
   password: string;
 
   @Field(() => [Post])
-  @Column()
-  posts: Post[]; // pending: relasi
+  @OneToMany((type) => Post, (post) => post.author)
+  posts: Post[];
 
   @Field()
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @Field()
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 }

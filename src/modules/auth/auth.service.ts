@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { AuthorDocument } from '../author/author.model';
+import { Author } from '../author/author.model';
 import { AuthorService } from '../author/author.service';
 import { LoginInput } from './auth.input';
 
@@ -12,28 +12,30 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  private _createToken(payload: AuthorDocument) {
-    const token = this.jwtService.sign(payload.toJSON());
+  private _createToken(payload: Author) {
+    const token = this.jwtService.sign(payload);
     return {
       expiresIn: process.env.EXPIRES_IN,
       token,
     };
   }
 
-  validate(payload: AuthorDocument) {
-    return this.authorService.read('_id', payload._id);
+  async validate(id: number) {
+    return await this.authorService.read('id', id);
   }
 
   async login(payload: LoginInput) {
-    const author = await this.authorService.read('email', payload.email);
-    if (!author)
+    const authors = await this.authorService.read('email', payload.email);
+    const { ...author } = authors[0];
+    if (!authors)
       throw new HttpException(
         'the author with that email was not found',
         HttpStatus.NOT_FOUND,
       );
+
     const match = await bcrypt.compare(payload.password, author.password);
     if (!match)
       throw new HttpException('wrong password', HttpStatus.UNAUTHORIZED);
-    return this._createToken(author as unknown as AuthorDocument);
+    return this._createToken(author);
   }
 }

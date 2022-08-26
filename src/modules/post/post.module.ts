@@ -5,12 +5,13 @@ import { AuthorModule } from '../author/author.module';
 import { Post } from './post.model';
 import { PostResolver } from './post.resolver';
 import { PostService } from './post.service';
+import { Tag } from './tags.model';
 
 @Module({
   imports: [
     forwardRef(() => AuthorModule),
     AuthModule,
-    TypeOrmModule.forFeature([Post]),
+    TypeOrmModule.forFeature([Post, Tag]),
   ],
   providers: [PostService, PostResolver],
 })

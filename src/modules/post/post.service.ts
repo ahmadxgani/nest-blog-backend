@@ -10,17 +10,20 @@ import {
 
 @Injectable()
 export class PostService {
-  constructor(
-    @InjectRepository(Post) private PostModel: Repository<Post>,
-  ) {}
+  constructor(@InjectRepository(Post) private PostModel: Repository<Post>) {}
 
   async getAll() {
     return await this.PostModel.find();
   }
 
   async create(payload: CreatePostInput) {
-    return await this.PostModel.insert(payload);
-    // return await PostModel.save();
+    const post = new Post();
+    post.title = payload.title;
+    post.content = payload.content;
+    post.tags = payload.tags;
+    post.slug = payload.slug as string;
+    post.likes = 0;
+    return await this.PostModel.save(post);
   }
 
   async read<T>(key: string, value?: T | any) {

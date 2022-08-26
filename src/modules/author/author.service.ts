@@ -8,6 +8,7 @@ import {
   DeleteAuthorInput,
   UpdateAuthorInput,
 } from './author.input';
+import { roles } from 'src/interface/role.interface';
 
 @Injectable()
 export class AuthorService {
@@ -15,24 +16,29 @@ export class AuthorService {
     @InjectRepository(Author) private AuthorModel: Repository<Author>,
   ) {}
 
-  create(payload: CreateAuthorInput) {
-    const salt = bcrypt.genSaltSync();
-    const password = bcrypt.hashSync(payload.password, salt);
-    return this.AuthorModel.insert({ ...payload, password });
+  async create(payload: CreateAuthorInput) {
+    const salt = await bcrypt.genSalt();
+    const password = await bcrypt.hash(payload.password, salt);
+    const author = new Author();
+    author.username = payload.username;
+    author.email = payload.email;
+    author.password = password;
+    author.posts = [];
+    author.role = roles.member;
+    return this.AuthorModel.save(author);
   }
 
   async readAll() {
-    console.log(await this.AuthorModel.find());
-    return this.AuthorModel.find();
+    return await this.AuthorModel.find();
   }
 
-  read<T>(key: string, value?: T | any) {
-    return this.AuthorModel.findOne({ [key]: value });
+  read<T>(key: string, value: T | any) {
+    return this.AuthorModel.findBy({ [key]: value });
   }
 
-  update(payload: UpdateAuthorInput) {
-    const salt = bcrypt.genSaltSync();
-    const password = bcrypt.hashSync(payload.password, salt);
+  async update(payload: UpdateAuthorInput) {
+    const salt = await bcrypt.genSalt();
+    const password = await bcrypt.hash(payload.password, salt);
     return this.AuthorModel.update(payload.id, { ...payload, password });
   }
 

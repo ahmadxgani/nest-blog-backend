@@ -4,10 +4,9 @@
 
 """Author model"""
 type Author {
-  _id: String!
-  bookmark: [Post!]!
   createdAt: DateTime!
   email: String!
+  id: Float!
   password: String!
   posts: [Post!]!
   role: roles!
@@ -24,7 +23,7 @@ input CreateAuthorInput {
 input CreatePostInput {
   content: String!
   slug: String
-  tags: [tags!] = [no_category]
+  tags: [String!]!
   title: String!
 }
 
@@ -34,15 +33,15 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 input DeleteAuthorInput {
-  _id: String!
+  id: String!
 }
 
 input DeletePostInput {
-  _id: String!
+  id: Float!
 }
 
 input GetAuthorInput {
-  _id: String!
+  id: String!
 }
 
 input GetPostInput {
@@ -72,12 +71,11 @@ type Mutation {
 
 """Post model"""
 type Post {
-  _id: String!
   content: String!
   createdAt: DateTime!
   likes: Int!
   slug: String!
-  tags: [tags!]!
+  tags: [String!]!
   title: String!
   updatedAt: DateTime!
 }
@@ -90,29 +88,21 @@ type Query {
 }
 
 input UpdateAuthorInput {
-  _id: String!
+  id: String!
   password: String!
   posts: [String!]!
   username: String!
 }
 
 input UpdatePostInput {
-  _id: String!
   content: String!
+  id: Float!
   slug: String
-  tags: [tags!]!
+  tags: [String!]!
   title: String!
 }
 
 enum roles {
   admin
   member
-}
-
-enum tags {
-  framework
-  javascript
-  no_category
-  nodejs
-  programming
 }
