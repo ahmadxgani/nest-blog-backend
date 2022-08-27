@@ -20,7 +20,6 @@ export class PostService {
     const post = new Post();
     post.title = payload.title;
     post.content = payload.content;
-    post.tags = payload.tags;
     post.slug = payload.slug as string;
     post.likes = 0;
     return await this.PostModel.save(post);

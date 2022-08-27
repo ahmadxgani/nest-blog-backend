@@ -11,9 +11,6 @@ export class CreatePostInput {
 
   @Field({ nullable: true })
   slug?: string;
-
-  @Field(() => [String])
-  tags: Tag[];
 }
 
 @InputType()

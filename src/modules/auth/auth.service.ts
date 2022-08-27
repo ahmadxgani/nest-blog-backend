@@ -25,9 +25,8 @@ export class AuthService {
   }
 
   async login(payload: LoginInput) {
-    const authors = await this.authorService.read('email', payload.email);
-    const { ...author } = authors[0];
-    if (!authors)
+    const author = await this.authorService.read('email', payload.email);
+    if (!author)
       throw new HttpException(
         'the author with that email was not found',
         HttpStatus.NOT_FOUND,

@@ -7,7 +7,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Tag } from './tags.model';
 
 @ObjectType({ description: 'Post model' })
 @Entity()
@@ -25,10 +24,6 @@ export class Post {
 
   @Column()
   author: number;
-
-  @Field(() => [String])
-  @OneToMany((type) => Tag, (tag) => tag.post)
-  tags: Tag[];
 
   @Column()
   slug: string;
