@@ -1,5 +1,5 @@
 import { Post } from './post.model';
-import { Entity, PrimaryGeneratedColumn, OneToMany, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
 import { Tag } from './tag.model';
 
 @Entity()
@@ -7,9 +7,9 @@ export class Post_Tag {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => Post, (pivot) => pivot.id)
-  post_id: Post[];
+  @ManyToOne(() => Post, (post) => post.posts)
+  post: Post;
 
-  @OneToMany(() => Tag, (pivot) => pivot.id)
-  tag_id: Tag[];
+  @ManyToOne(() => Tag, (tag) => tag.posts)
+  tag: Tag;
 }

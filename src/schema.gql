@@ -22,7 +22,9 @@ input CreateAuthorInput {
 
 input CreatePostInput {
   content: String!
+  draft: Boolean
   slug: String
+  tags: [Float!]!
   title: String!
 }
 

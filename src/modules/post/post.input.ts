@@ -11,6 +11,14 @@ export class CreatePostInput {
 
   @Field({ nullable: true })
   slug?: string;
+
+  @Field({ nullable: true })
+  draft?: boolean;
+
+  @Field(() => [Number])
+  tags: number[];
+
+  author: number;
 }
 
 @InputType()

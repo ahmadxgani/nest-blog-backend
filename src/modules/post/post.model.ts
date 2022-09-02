@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Post_Tag } from './post_tag.model';
 
 @ObjectType({ description: 'Post model' })
 @Entity()
@@ -25,12 +26,18 @@ export class Post {
   @Column()
   author: number;
 
+  @Column({ default: true })
+  draft: boolean;
+
   @Column()
   slug: string;
 
   @Field(() => Int)
   @Column()
   likes: number;
+
+  @OneToMany(() => Post_Tag, (posts) => posts.post)
+  posts: Post_Tag[];
 
   @Field()
   @CreateDateColumn({

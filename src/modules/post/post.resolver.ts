@@ -1,7 +1,16 @@
-import { Args, Resolver, Query, Mutation } from '@nestjs/graphql';
+import {
+  Args,
+  Resolver,
+  Query,
+  Mutation,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { roles } from 'src/interface/role.interface';
 import { Slugify } from 'src/util/utilities';
 import { Auth } from '../../decorator/auth.decorator';
+import { Author } from '../author/author.model';
+import { Author as InjectAuthor } from 'src/decorator/author.decorator';
 import {
   CreatePostInput,
   DeletePostInput,
@@ -10,6 +19,7 @@ import {
 } from './post.input';
 import { Post } from './post.model';
 import { PostService } from './post.service';
+import { Post_Tag } from './post_tag.model';
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -18,6 +28,12 @@ export class PostResolver {
   @Query(() => [Post])
   async ShowAllPost() {
     return await this.postService.getAll();
+  }
+
+  @ResolveField()
+  async posts(@Parent() tags: Post_Tag) {
+    // await author.populate({ path: 'posts', model: Post.name }).execPopulate(); pending: relasi
+    // return author.posts;
   }
 
   @Query(() => [Post])
@@ -30,11 +46,12 @@ export class PostResolver {
   async CreatePost(
     @Args('payload')
     payload: CreatePostInput,
-    // @Author() author: AuthorDocument,
+    @InjectAuthor() author: Author,
   ) {
     return await this.postService.create({
       ...payload,
       slug: payload.slug ? payload.slug : Slugify(payload.title),
+      author: author.id,
     });
   }
 

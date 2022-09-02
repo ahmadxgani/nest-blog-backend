@@ -7,10 +7,6 @@ import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
 import { AuthModule } from './modules/auth/auth.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { Post } from './modules/post/post.model';
-import { Author } from './modules/author/author.model';
-import { Tag } from './modules/post/tag.model';
-import { Post_Tag } from './modules/post/post_tag.model';
 
 @Module({
   imports: [
