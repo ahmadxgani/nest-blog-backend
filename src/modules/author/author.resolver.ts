@@ -4,25 +4,27 @@ import {
   GetAuthorInput,
   UpdateAuthorInput,
 } from './author.input';
-import { Args, Mutation, Resolver, Query, ResolveField } from '@nestjs/graphql';
+import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { Author } from './author.model';
 import { AuthorService } from './author.service';
-import { Parent } from '@nestjs/graphql';
 import { roles } from 'src/interface/role.interface';
 import { Auth } from '../../decorator/auth.decorator';
+import { Public } from 'src/decorator/public.decorator';
+import { ResponseType } from 'src/util/utilities';
 
 @Resolver(() => Author)
 export class AuthorResolver {
   constructor(private authorService: AuthorService) {}
 
+  @Public()
   @Mutation(() => Author)
   async CreateAuthor(@Args('payload') payload: CreateAuthorInput) {
     return await this.authorService.create(payload);
   }
 
-  @Query(() => [Author])
+  @Query(() => Author)
   async GetAuthorById(@Args('payload') payload: GetAuthorInput) {
-    return await this.authorService.read('id', payload.id);
+    return await this.authorService.readById(payload.id);
   }
 
   @Query(() => [Author])
@@ -32,20 +34,15 @@ export class AuthorResolver {
   }
 
   @Mutation(() => Author)
-  @Auth(roles.admin, roles.member)
   async UpdateAuthor(@Args('payload') payload: UpdateAuthorInput) {
     return await this.authorService.update(payload);
   }
 
-  @Mutation(() => Author)
-  @Auth(roles.admin, roles.member)
+  @Mutation(() => ResponseType)
   async DeleteAuthor(@Args('payload') payload: DeleteAuthorInput) {
-    return await this.authorService.delete(payload);
-  }
-
-  @ResolveField()
-  async posts(@Parent() author: Author) {
-    // await author.populate({ path: 'posts', model: Post.name }).execPopulate(); pending: relasi
-    return author.posts;
+    await this.authorService.delete(payload);
+    return {
+      response: true,
+    };
   }
 }

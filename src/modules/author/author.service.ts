@@ -26,11 +26,22 @@ export class AuthorService {
   }
 
   readAll() {
-    return this.AuthorModel.find();
+    return this.AuthorModel.find({
+      relations: {
+        posts: { tags: true },
+      },
+    });
   }
 
   read<T>(key: string, value: T) {
     return this.AuthorModel.findOneBy({ [key]: value });
+  }
+
+  readById(id: number) {
+    return this.AuthorModel.findOne({
+      relations: { posts: { tags: true } },
+      where: { id },
+    });
   }
 
   async update(payload: UpdateAuthorInput) {

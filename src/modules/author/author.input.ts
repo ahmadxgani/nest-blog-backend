@@ -30,7 +30,7 @@ export class UpdateAuthorInput {
   @Field()
   password: string;
 
-  @Field(() => [String])
+  @Field(() => [Number])
   posts: Post[];
 }
 
