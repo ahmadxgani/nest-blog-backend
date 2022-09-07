@@ -24,8 +24,12 @@ input CreatePostInput {
   content: String!
   draft: Boolean
   slug: String
-  tags: [Float!]!
+  tags: [Int!]!
   title: String!
+}
+
+input CreateTagInput {
+  name: String!
 }
 
 """
@@ -38,6 +42,10 @@ input DeleteAuthorInput {
 }
 
 input DeletePostInput {
+  id: Int!
+}
+
+input DeleteTagInput {
   id: Float!
 }
 
@@ -45,9 +53,8 @@ input GetAuthorInput {
   id: Int!
 }
 
-input GetPostInput {
-  by: String!
-  value: String!
+input GetPostByIdInput {
+  id: Int!
 }
 
 input LoginInput {
@@ -63,42 +70,64 @@ type LoginType {
 type Mutation {
   CreateAuthor(payload: CreateAuthorInput!): Author!
   CreatePost(payload: CreatePostInput!): Post!
-  DeleteAuthor(payload: DeleteAuthorInput!): Author!
-  DeletePost(payload: DeletePostInput!): Post!
+  CreateTag(payload: CreateTagInput!): Tag!
+  DeleteAuthor(payload: DeleteAuthorInput!): ResponseType!
+  DeletePost(payload: DeletePostInput!): ResponseType!
+  DeleteTag(payload: DeleteTagInput!): ResponseType!
   UpdateAuthor(payload: UpdateAuthorInput!): Author!
   UpdatePost(payload: UpdatePostInput!): Post!
+  UpdateTag(payload: UpdateTagInput!): Tag!
   login(payload: LoginInput!): LoginType!
 }
 
 """Post model"""
 type Post {
+  author: Author!
   content: String!
   createdAt: DateTime!
   likes: Int!
+  tags: [Tag!]!
   title: String!
   updatedAt: DateTime!
 }
 
 type Query {
-  GetAuthorById(payload: GetAuthorInput!): [Author!]!
-  GetPost(payload: GetPostInput!): [Post!]!
+  GetAuthorById(payload: GetAuthorInput!): Author!
+  GetPost(payload: GetPostByIdInput!): Post!
   ShowAllAuthor: [Author!]!
   ShowAllPost: [Post!]!
+  ShowAllTag: [Tag!]!
+}
+
+"""Return Response Type"""
+type ResponseType {
+  success: Boolean!
+}
+
+"""Tag model"""
+type Tag {
+  id: Int!
+  name: String!
 }
 
 input UpdateAuthorInput {
   id: Int!
   password: String!
-  posts: [String!]!
+  posts: [Float!]!
   username: String!
 }
 
 input UpdatePostInput {
   content: String!
-  id: Float!
+  id: Int!
   slug: String
-  tags: [String!]!
+  tags: [Int!]!
   title: String!
+}
+
+input UpdateTagInput {
+  id: Float!
+  name: String!
 }
 
 enum roles {
