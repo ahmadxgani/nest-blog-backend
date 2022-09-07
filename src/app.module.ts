@@ -7,6 +7,8 @@ import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
 import { AuthModule } from './modules/auth/auth.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { APP_GUARD } from '@nestjs/core';
+import { PassportGuard } from './guard/passport.guard';
 
 @Module({
   imports: [
@@ -31,6 +33,12 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     PostModule,
     AuthorModule,
     AuthModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: PassportGuard,
+    },
   ],
 })
 export class AppModule {}
