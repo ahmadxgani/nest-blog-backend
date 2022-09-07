@@ -53,6 +53,10 @@ input GetAuthorInput {
   id: Int!
 }
 
+input GetByTagInput {
+  name: String!
+}
+
 input GetPostByIdInput {
   id: Int!
 }
@@ -97,6 +101,7 @@ type Query {
   ShowAllAuthor: [Author!]!
   ShowAllPost: [Post!]!
   ShowAllTag: [Tag!]!
+  ShowByTag(payload: GetByTagInput!): Tag!
 }
 
 """Return Response Type"""
@@ -108,6 +113,7 @@ type ResponseType {
 type Tag {
   id: Int!
   name: String!
+  posts: [Post!]!
 }
 
 input UpdateAuthorInput {
