@@ -13,6 +13,7 @@ export class Tag {
   @Field()
   name: string;
 
+  @Field(() => [Post])
   @ManyToMany((_type) => Post, (post) => post.tags, {
     onDelete: 'CASCADE',
   })

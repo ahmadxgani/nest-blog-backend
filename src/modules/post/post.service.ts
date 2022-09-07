@@ -67,7 +67,9 @@ export class PostService {
   }
 
   async getAllTag() {
-    return await this.TagModel.find();
+    return await this.TagModel.find({
+      relations: { posts: { author: true } },
+    });
   }
 
   async createTag(payload: CreateTagInput) {
@@ -78,8 +80,11 @@ export class PostService {
     return await this.TagModel.save(tag);
   }
 
-  async readTag<T>(key: string, value?: T | any) {
-    return await this.TagModel.findOneBy({ [key]: value });
+  async readTag(name: string) {
+    return await this.TagModel.findOne({
+      where: { name },
+      relations: { posts: true },
+    });
   }
 
   async updateTag(payload: UpdateTagInput) {

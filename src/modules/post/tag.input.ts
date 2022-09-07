@@ -16,6 +16,12 @@ export class GetTagInput {
 }
 
 @InputType()
+export class GetByTagInput {
+  @Field()
+  name: string;
+}
+
+@InputType()
 export class GetTagByIdInput {
   @Field()
   id: number;

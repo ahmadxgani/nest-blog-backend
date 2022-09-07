@@ -8,7 +8,12 @@ import {
   GetPostByIdInput,
   UpdatePostInput,
 } from './post.input';
-import { CreateTagInput, DeleteTagInput, UpdateTagInput } from './tag.input';
+import {
+  CreateTagInput,
+  DeleteTagInput,
+  GetByTagInput,
+  UpdateTagInput,
+} from './tag.input';
 import { Post } from './post.model';
 import { PostService } from './post.service';
 import { Tag } from './tag.model';
@@ -20,6 +25,11 @@ export class PostResolver {
   @Query(() => [Tag])
   async ShowAllTag() {
     return await this.postService.getAllTag();
+  }
+
+  @Query(() => Tag)
+  async ShowByTag(@Args('payload') { name }: GetByTagInput) {
+    return await this.postService.readTag(name);
   }
 
   @Mutation(() => Tag)
