@@ -1,5 +1,6 @@
-import { Field, InputType } from '@nestjs/graphql';
-import { Tag } from './tags.model';
+import { Field, InputType, Int } from '@nestjs/graphql';
+import { Author } from '../author/author.model';
+import { Tag } from './tag.model';
 
 @InputType()
 export class CreatePostInput {
@@ -15,10 +16,10 @@ export class CreatePostInput {
   @Field({ nullable: true })
   draft?: boolean;
 
-  @Field(() => [Number])
-  tags: number[];
+  @Field(() => [Int])
+  tags: Tag[];
 
-  author: number;
+  author: Author;
 }
 
 @InputType()
@@ -31,8 +32,14 @@ export class GetPostInput {
 }
 
 @InputType()
+export class GetPostByIdInput {
+  @Field(() => Int)
+  id: number;
+}
+
+@InputType()
 export class UpdatePostInput {
-  @Field()
+  @Field(() => Int)
   id: number;
 
   @Field()
@@ -44,12 +51,12 @@ export class UpdatePostInput {
   @Field({ nullable: true })
   slug?: string;
 
-  @Field(() => [String])
+  @Field(() => [Int])
   tags: Tag[];
 }
 
 @InputType()
 export class DeletePostInput {
-  @Field()
+  @Field(() => Int)
   id: number;
 }

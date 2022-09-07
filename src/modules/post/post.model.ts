@@ -3,11 +3,14 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToMany,
+  ManyToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinTable,
 } from 'typeorm';
-import { Post_Tag } from './post_tag.model';
+import { Author } from '../author/author.model';
+import { Tag } from './tag.model';
 
 @ObjectType({ description: 'Post model' })
 @Entity()
@@ -23,8 +26,9 @@ export class Post {
   @Column()
   content: string;
 
-  @Column()
-  author: number;
+  @Field(() => Author)
+  @ManyToOne(() => Author, (author) => author.posts)
+  author: Author;
 
   @Column({ default: true })
   draft: boolean;
@@ -36,8 +40,12 @@ export class Post {
   @Column()
   likes: number;
 
-  @OneToMany(() => Post_Tag, (posts) => posts.post)
-  posts: Post_Tag[];
+  @Field(() => [Tag])
+  @ManyToMany((_type) => Tag, (tag) => tag.posts, {
+    cascade: true,
+  })
+  @JoinTable()
+  tags: Tag[];
 
   @Field()
   @CreateDateColumn({

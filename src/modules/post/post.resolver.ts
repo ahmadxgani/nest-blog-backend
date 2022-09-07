@@ -1,48 +1,62 @@
-import {
-  Args,
-  Resolver,
-  Query,
-  Mutation,
-  ResolveField,
-  Parent,
-} from '@nestjs/graphql';
-import { roles } from 'src/interface/role.interface';
-import { Slugify } from 'src/util/utilities';
-import { Auth } from '../../decorator/auth.decorator';
+import { Args, Resolver, Query, Mutation } from '@nestjs/graphql';
+import { ResponseType, Slugify } from 'src/util/utilities';
 import { Author } from '../author/author.model';
 import { Author as InjectAuthor } from 'src/decorator/author.decorator';
 import {
   CreatePostInput,
   DeletePostInput,
-  GetPostInput,
+  GetPostByIdInput,
   UpdatePostInput,
 } from './post.input';
+import { CreateTagInput, DeleteTagInput, UpdateTagInput } from './tag.input';
 import { Post } from './post.model';
 import { PostService } from './post.service';
-import { Post_Tag } from './post_tag.model';
+import { Tag } from './tag.model';
 
 @Resolver(() => Post)
 export class PostResolver {
   constructor(private postService: PostService) {}
+
+  @Query(() => [Tag])
+  async ShowAllTag() {
+    return await this.postService.getAllTag();
+  }
+
+  @Mutation(() => Tag)
+  async CreateTag(
+    @Args('payload')
+    payload: CreateTagInput,
+  ) {
+    return await this.postService.createTag(payload);
+  }
+
+  @Mutation(() => Tag)
+  async UpdateTag(
+    @Args('payload')
+    payload: UpdateTagInput,
+  ) {
+    return await this.postService.updateTag(payload);
+  }
+
+  @Mutation(() => ResponseType)
+  async DeleteTag(@Args('payload') payload: DeleteTagInput) {
+    await this.postService.deleteTag(payload);
+    return {
+      success: true,
+    };
+  }
 
   @Query(() => [Post])
   async ShowAllPost() {
     return await this.postService.getAll();
   }
 
-  @ResolveField()
-  async posts(@Parent() tags: Post_Tag) {
-    // await author.populate({ path: 'posts', model: Post.name }).execPopulate(); pending: relasi
-    // return author.posts;
-  }
-
-  @Query(() => [Post])
-  async GetPost(@Args('payload') payload: GetPostInput) {
-    return await this.postService.read(payload.by, payload.value);
+  @Query(() => Post)
+  async GetPost(@Args('payload') payload: GetPostByIdInput) {
+    return await this.postService.readById(payload.id);
   }
 
   @Mutation(() => Post)
-  @Auth(roles.member, roles.admin)
   async CreatePost(
     @Args('payload')
     payload: CreatePostInput,
@@ -51,12 +65,11 @@ export class PostResolver {
     return await this.postService.create({
       ...payload,
       slug: payload.slug ? payload.slug : Slugify(payload.title),
-      author: author.id,
+      author: author,
     });
   }
 
   @Mutation(() => Post)
-  @Auth(roles.member, roles.admin)
   async UpdatePost(
     @Args('payload')
     payload: UpdatePostInput,
@@ -67,12 +80,11 @@ export class PostResolver {
     });
   }
 
-  @Mutation(() => Post)
-  @Auth(roles.member, roles.admin)
-  async DeletePost(
-    @Args('payload') payload: DeletePostInput,
-    // @Author() author: AuthorDocument,
-  ) {
-    return await this.postService.delete(payload);
+  @Mutation(() => ResponseType)
+  async DeletePost(@Args('payload') payload: DeletePostInput) {
+    await this.postService.delete(payload);
+    return {
+      success: true,
+    };
   }
 }
