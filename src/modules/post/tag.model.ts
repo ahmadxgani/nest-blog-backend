@@ -1,6 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Post_Tag } from './post_tag.model';
+import { Post } from './post.model';
 
 @ObjectType({ description: 'Tag model' })
 @Entity()
@@ -13,6 +13,8 @@ export class Tag {
   @Field()
   name: string;
 
-  @OneToMany(() => Post_Tag, (tags) => tags.tag)
-  posts: Post_Tag[];
+  @ManyToMany((_type) => Post, (post) => post.tags, {
+    onDelete: 'CASCADE',
+  })
+  posts: Post[];
 }
