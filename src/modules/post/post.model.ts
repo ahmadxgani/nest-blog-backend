@@ -41,7 +41,7 @@ export class Post {
   likes: number;
 
   @Field(() => [Tag])
-  @ManyToMany((_type) => Tag, (tag) => tag.posts, {
+  @ManyToMany(() => Tag, (tag) => tag.posts, {
     cascade: true,
   })
   @JoinTable()
