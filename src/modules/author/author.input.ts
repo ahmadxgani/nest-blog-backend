@@ -1,4 +1,11 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import {
+  Field,
+  InputType,
+  Int,
+  IntersectionType,
+  OmitType,
+  PickType,
+} from '@nestjs/graphql';
 
 @InputType()
 export class CreateAuthorInput {
@@ -19,19 +26,12 @@ export class GetAuthorInput {
 }
 
 @InputType()
-export class UpdateAuthorInput {
-  @Field(() => Int)
-  id: number;
-
-  @Field()
-  username: string;
-
-  @Field()
-  password: string;
-}
+export class UpdateAuthorInput extends IntersectionType(
+  OmitType(CreateAuthorInput, ['email'] as const),
+  GetAuthorInput,
+) {}
 
 @InputType()
-export class DeleteAuthorInput {
-  @Field(() => Int)
-  id: number;
-}
+export class DeleteAuthorInput extends PickType(GetAuthorInput, [
+  'id',
+] as const) {}

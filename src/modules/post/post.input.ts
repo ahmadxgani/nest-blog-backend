@@ -1,4 +1,11 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import {
+  Field,
+  InputType,
+  Int,
+  IntersectionType,
+  OmitType,
+  PickType,
+} from '@nestjs/graphql';
 import { Author } from '../author/author.model';
 import { Tag } from './tag.model';
 
@@ -38,25 +45,12 @@ export class GetPostByIdInput {
 }
 
 @InputType()
-export class UpdatePostInput {
-  @Field(() => Int)
-  id: number;
-
-  @Field()
-  title: string;
-
-  @Field()
-  content: string;
-
-  @Field({ nullable: true })
-  slug?: string;
-
-  @Field(() => [Int])
-  tags: Tag[];
-}
+export class UpdatePostInput extends IntersectionType(
+  GetPostByIdInput,
+  OmitType(CreatePostInput, ['author'] as const),
+) {}
 
 @InputType()
-export class DeletePostInput {
-  @Field(() => Int)
-  id: number;
-}
+export class DeletePostInput extends PickType(GetPostByIdInput, [
+  'id',
+] as const) {}
