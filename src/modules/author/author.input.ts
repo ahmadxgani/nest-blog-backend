@@ -1,5 +1,4 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { Post } from '../post/post.model';
 
 @InputType()
 export class CreateAuthorInput {
@@ -29,9 +28,6 @@ export class UpdateAuthorInput {
 
   @Field()
   password: string;
-
-  @Field(() => [Number])
-  posts: Post[];
 }
 
 @InputType()
