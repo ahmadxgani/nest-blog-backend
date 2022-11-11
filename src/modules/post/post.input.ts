@@ -6,6 +6,7 @@ import {
   OmitType,
   PickType,
 } from '@nestjs/graphql';
+import { content } from 'src/interface/content.interface';
 import { Author } from '../author/author.model';
 import { Tag } from './tag.model';
 
@@ -15,10 +16,10 @@ export class CreatePostInput {
   title: string;
 
   @Field()
-  content: string;
+  content: content;
 
-  @Field({ nullable: true })
-  slug?: string;
+  @Field()
+  slug: string;
 
   @Field({ nullable: true })
   draft?: boolean;
