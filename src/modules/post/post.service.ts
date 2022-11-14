@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
-import { Post } from './post.model';
+import { Post } from './post.entity';
 import {
   CreatePostInput,
   DeletePostInput,
   UpdatePostInput,
 } from './post.input';
-import { Tag } from './tag.model';
+import { Tag } from './tag.entity';
 import { CreateTagInput, DeleteTagInput, UpdateTagInput } from './tag.input';
 
 @Injectable()

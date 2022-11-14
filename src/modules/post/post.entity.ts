@@ -1,5 +1,4 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { content } from 'src/interface/content.interface';
 import {
   Entity,
   Column,
@@ -10,8 +9,8 @@ import {
   ManyToOne,
   JoinTable,
 } from 'typeorm';
-import { Author } from '../author/author.model';
-import { Tag } from './tag.model';
+import { Author } from '../author/author.entity';
+import { Tag } from './tag.entity';
 
 @ObjectType({ description: 'Post model' })
 @Entity()
@@ -25,7 +24,7 @@ export class Post {
 
   @Field()
   @Column()
-  content: content;
+  content: string;
 
   @Field(() => Author)
   @ManyToOne(() => Author, (author) => author.posts)

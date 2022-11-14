@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { roles } from 'src/interface/role.interface';
-import { Post } from '../post/post.model';
+import { Post } from '../post/post.entity';
 
 registerEnumType(roles, { name: 'roles' });
 
@@ -36,7 +36,7 @@ export class Author {
   password: string;
 
   @Field(() => [Post])
-  @OneToMany(() => Post, (post) => post.author)
+  @OneToMany(() => Post, (post) => post.author, { eager: true })
   posts: Post[];
 
   @Field()

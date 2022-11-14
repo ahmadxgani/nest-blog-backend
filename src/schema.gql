@@ -23,7 +23,7 @@ input CreateAuthorInput {
 input CreatePostInput {
   content: String!
   draft: Boolean
-  slug: String
+  slug: String!
   tags: [Int!]!
   title: String!
 }
@@ -126,7 +126,7 @@ input UpdatePostInput {
   content: String!
   draft: Boolean
   id: Int!
-  slug: String
+  slug: String!
   tags: [Int!]!
   title: String!
 }

@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -21,14 +23,22 @@ import { PassportGuard } from './guard/passport.guard';
       playground: true,
     }),
     TypeOrmModule.forRoot({
-      type: 'mysql',
+      type: 'postgres',
       host: 'localhost',
-      port: 3306,
+      port: 5432,
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
+      entities: [__dirname + '/**/*.entity.ts'],
       autoLoadEntities: true,
+      logging: true,
       synchronize: true,
+      // migrationsRun: false,
+      // migrationsTableName: 'migration',
+      // migrations: [__dirname + '/migration/**/*.ts'],
+      // cli: {
+      //   migrationsDir: 'src/migration',
+      // },
     }),
     PostModule,
     AuthorModule,

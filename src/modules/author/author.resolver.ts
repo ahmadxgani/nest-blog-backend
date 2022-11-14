@@ -5,7 +5,7 @@ import {
   UpdateAuthorInput,
 } from './author.input';
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
-import { Author } from './author.model';
+import { Author } from './author.entity';
 import { AuthorService } from './author.service';
 import { roles } from 'src/interface/role.interface';
 import { Auth } from '../../decorator/auth.decorator';

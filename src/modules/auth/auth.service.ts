@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { Author } from '../author/author.model';
+import { Author } from '../author/author.entity';
 import { AuthorService } from '../author/author.service';
 import { LoginInput } from './auth.input';
 

@@ -1,6 +1,6 @@
 import { Args, Resolver, Query, Mutation } from '@nestjs/graphql';
 import { ResponseType, Slugify } from 'src/util/utilities';
-import { Author } from '../author/author.model';
+import { Author } from '../author/author.entity';
 import { Author as InjectAuthor } from 'src/decorator/author.decorator';
 import {
   CreatePostInput,
@@ -14,9 +14,9 @@ import {
   GetByTagInput,
   UpdateTagInput,
 } from './tag.input';
-import { Post } from './post.model';
+import { Post } from './post.entity';
 import { PostService } from './post.service';
-import { Tag } from './tag.model';
+import { Tag } from './tag.entity';
 
 @Resolver(() => Post)
 export class PostResolver {
