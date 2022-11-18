@@ -17,6 +17,7 @@ import {
 import { Post } from './post.entity';
 import { PostService } from './post.service';
 import { Tag } from './tag.entity';
+import { Public } from 'src/decorator/public.decorator';
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -57,11 +58,13 @@ export class PostResolver {
   }
 
   @Query(() => [Post])
+  @Public()
   async ShowAllPost() {
     return await this.postService.getAll();
   }
 
   @Query(() => Post)
+  @Public()
   async GetPost(@Args('payload') payload: GetPostByIdInput) {
     return await this.postService.readById(payload.id);
   }
