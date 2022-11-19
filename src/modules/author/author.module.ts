@@ -5,14 +5,22 @@ import { Author } from './author.entity';
 import { AuthorResolver } from './author.resolver';
 import { AuthorService } from './author.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
+import { APP_GUARD } from '@nestjs/core';
+import { PassportGuard } from '../../guard/passport.guard';
 @Module({
   imports: [
     forwardRef(() => AuthModule),
     forwardRef(() => PostModule),
     TypeOrmModule.forFeature([Author]),
   ],
-  providers: [AuthorService, AuthorResolver],
+  providers: [
+    AuthorService,
+    AuthorResolver,
+    {
+      provide: APP_GUARD,
+      useClass: PassportGuard,
+    },
+  ],
   exports: [AuthorService],
 })
 export class AuthorModule {}
