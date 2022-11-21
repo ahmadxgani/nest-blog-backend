@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class CreateTagInput {
@@ -23,13 +23,13 @@ export class GetByTagInput {
 
 @InputType()
 export class GetTagByIdInput {
-  @Field()
+  @Field(() => Int)
   id: number;
 }
 
 @InputType()
 export class UpdateTagInput {
-  @Field()
+  @Field(() => Int)
   id: number;
 
   @Field()
@@ -38,6 +38,6 @@ export class UpdateTagInput {
 
 @InputType()
 export class DeleteTagInput {
-  @Field()
+  @Field(() => Int)
   id: number;
 }

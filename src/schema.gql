@@ -46,7 +46,7 @@ input DeletePostInput {
 }
 
 input DeleteTagInput {
-  id: Float!
+  id: Int!
 }
 
 input GetAuthorInput {
@@ -132,7 +132,7 @@ input UpdatePostInput {
 }
 
 input UpdateTagInput {
-  id: Float!
+  id: Int!
   name: String!
 }
 
