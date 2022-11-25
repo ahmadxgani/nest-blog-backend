@@ -33,6 +33,7 @@ export class Post {
   @Column({ default: true })
   draft: boolean;
 
+  @Field()
   @Column()
   slug: string;
 

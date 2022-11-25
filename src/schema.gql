@@ -90,6 +90,7 @@ type Post {
   content: String!
   createdAt: DateTime!
   likes: Int!
+  slug: String!
   tags: [Tag!]!
   title: String!
   updatedAt: DateTime!

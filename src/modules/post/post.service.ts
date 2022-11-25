@@ -21,6 +21,7 @@ export class PostService {
     return await this.PostModel.find({
       relations: {
         tags: true,
+        author: true,
       },
     });
   }
@@ -46,6 +47,7 @@ export class PostService {
     return await this.PostModel.findOne({
       relations: {
         tags: true,
+        author: true,
       },
       where: { id },
     });
