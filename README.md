@@ -8,4 +8,4 @@
 - Apollo Server as Graphql module
 
 ## Important Note!
-> Run backend side before start frontend side, and ensure you has been config your environment variable
+> Run backend side first, before start the frontend side. And ensure you has been config your environment variable
