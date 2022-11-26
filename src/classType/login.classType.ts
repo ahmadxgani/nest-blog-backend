@@ -7,4 +7,10 @@ export class LoginType {
 
   @Field()
   token: string;
+
+  @Field()
+  username: string;
+
+  @Field()
+  email: string;
 }

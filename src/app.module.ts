@@ -31,12 +31,6 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       autoLoadEntities: true,
       logging: true,
       synchronize: true,
-      // migrationsRun: false,
-      // migrationsTableName: 'migration',
-      // migrations: [__dirname + '/migration/**/*.ts'],
-      // cli: {
-      //   migrationsDir: 'src/migration',
-      // },
     }),
     PostModule,
     AuthorModule,

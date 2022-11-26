@@ -17,6 +17,8 @@ export class AuthService {
     return {
       expiresIn: process.env.EXPIRES_IN,
       token,
+      username: payload.username,
+      email: payload.email,
     };
   }
 

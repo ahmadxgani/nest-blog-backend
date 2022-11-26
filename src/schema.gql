@@ -67,8 +67,10 @@ input LoginInput {
 }
 
 type LoginType {
+  email: String!
   expiresIn: String!
   token: String!
+  username: String!
 }
 
 type Mutation {

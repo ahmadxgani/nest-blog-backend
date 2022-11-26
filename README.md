@@ -1,5 +1,7 @@
 # Zero's Blog | Server Side
+
 ## Technologies stack:
+
 - Nestjs as core framework
 - Express as Nestjs adapter
 - Typescript as typed language
@@ -8,4 +10,5 @@
 - Apollo Server as Graphql module
 
 ## Important Note!
-> Run backend side first, before start the frontend side. And ensure you has been config your environment variable
+
+> Run backend side first, before start the frontend side. And ensure you has been config your environment variable, Also don't forget to configure your database on postgresql
