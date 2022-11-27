@@ -13,7 +13,6 @@
     "backend",
     "apollo",
     "graphql",
-    "wyswyg",
     "typescript"
   ],
   "scripts": {
