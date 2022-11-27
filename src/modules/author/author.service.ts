@@ -45,8 +45,14 @@ export class AuthorService {
     });
   }
 
-  update(payload: UpdateAuthorInput) {
-    return this.AuthorModel.update(payload.id, payload);
+  async update(payload: UpdateAuthorInput) {
+    const user = await this.AuthorModel.findOneBy({
+      id: payload.id,
+    });
+    if (user) {
+      user.username = payload.username;
+      return await this.AuthorModel.save(user);
+    }
   }
 
   async changePassword(payload: ChangePasswordInput) {
