@@ -34,7 +34,7 @@ export class Post {
   draft: boolean;
 
   @Field()
-  @Column()
+  @Column({ unique: true })
   slug: string;
 
   @Field(() => Int)

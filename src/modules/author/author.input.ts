@@ -32,9 +32,17 @@ export class GetAuthorInput {
 
 @InputType()
 export class UpdateAuthorInput extends IntersectionType(
-  OmitType(CreateAuthorInput, ['email'] as const),
+  OmitType(CreateAuthorInput, ['email', 'password'] as const),
   GetAuthorInput,
 ) {}
+
+@InputType()
+export class ChangePasswordInput {
+  @Field(() => Int)
+  id: number;
+  @Field()
+  password: string;
+}
 
 @InputType()
 export class DeleteAuthorInput extends PickType(GetAuthorInput, [

@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { Author } from './author.entity';
 import { Repository } from 'typeorm';
 import {
+  ChangePasswordInput,
   CreateAuthorInput,
   DeleteAuthorInput,
   UpdateAuthorInput,
@@ -44,7 +45,11 @@ export class AuthorService {
     });
   }
 
-  async update(payload: UpdateAuthorInput) {
+  update(payload: UpdateAuthorInput) {
+    return this.AuthorModel.update(payload.id, payload);
+  }
+
+  async changePassword(payload: ChangePasswordInput) {
     const salt = await bcrypt.genSalt();
     const password = await bcrypt.hash(payload.password, salt);
     return this.AuthorModel.update(payload.id, { ...payload, password });

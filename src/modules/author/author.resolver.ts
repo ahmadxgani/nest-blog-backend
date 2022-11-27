@@ -35,7 +35,8 @@ export class AuthorResolver {
 
   @Mutation(() => Author)
   async UpdateAuthor(@Args('payload') payload: UpdateAuthorInput) {
-    return await this.authorService.update(payload);
+    await this.authorService.update(payload);
+    return payload;
   }
 
   @Mutation(() => ResponseType)

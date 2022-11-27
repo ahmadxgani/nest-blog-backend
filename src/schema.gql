@@ -69,6 +69,7 @@ input LoginInput {
 type LoginType {
   email: String!
   expiresIn: String!
+  id: Int!
   token: String!
   username: String!
 }
@@ -121,7 +122,6 @@ type Tag {
 
 input UpdateAuthorInput {
   id: Int!
-  password: String!
   username: String!
 }
 
