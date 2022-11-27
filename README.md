@@ -11,4 +11,4 @@
 
 ## Important Note!
 
-> Run backend side first, before start the frontend side. And ensure you has been config your environment variable, Also don't forget to configure your database on postgresql
+> Run backend side first, before start the frontend side. And ensure that you have configured your environment variable, Also don't forget to configure your database on postgresql

@@ -66,7 +66,7 @@ export class PostResolver {
   @Query(() => Post)
   @Public()
   async GetPost(@Args('payload') payload: GetPostByIdInput) {
-    return await this.postService.readById(payload.id);
+    return await this.postService.readById(payload.slug);
   }
 
   @Mutation(() => Post)

@@ -58,7 +58,7 @@ input GetByTagInput {
 }
 
 input GetPostByIdInput {
-  id: Int!
+  slug: String!
 }
 
 input LoginInput {
