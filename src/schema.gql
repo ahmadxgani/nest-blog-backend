@@ -24,7 +24,7 @@ input CreatePostInput {
   content: String!
   draft: Boolean
   slug: String!
-  tags: [Int!]!
+  tags: [Int!]
   title: String!
 }
 
@@ -130,7 +130,7 @@ input UpdatePostInput {
   draft: Boolean
   id: Int!
   slug: String!
-  tags: [Int!]!
+  tags: [Int!]
   title: String!
 }
 

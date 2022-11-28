@@ -34,7 +34,9 @@ export class PostService {
     post.slug = payload.slug as string;
     post.likes = 0;
     post.author = payload.author;
-    post.tags = await this.TagModel.find({ where: { id: In(payload.tags) } });
+    post.tags = await this.TagModel.find({
+      where: { id: In(payload.tags || []) },
+    });
 
     return await this.PostModel.save(post);
   }
@@ -61,7 +63,9 @@ export class PostService {
     post.title = payload.title;
     post.content = payload.content;
     post.slug = payload.slug as string;
-    post.tags = await this.TagModel.find({ where: { id: In(payload.tags) } });
+    post.tags = await this.TagModel.find({
+      where: { id: In(payload.tags || []) },
+    });
 
     return await this.PostModel.save(post);
   }

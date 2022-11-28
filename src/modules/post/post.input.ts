@@ -22,8 +22,8 @@ export class CreatePostInput {
   @Field({ nullable: true })
   draft?: boolean;
 
-  @Field(() => [Int])
-  tags: Tag[];
+  @Field(() => [Int], { nullable: true })
+  tags?: Tag[];
 
   author: Author;
 }
