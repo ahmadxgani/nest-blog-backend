@@ -39,8 +39,8 @@ export class GetPostByIdInput {
 
 @InputType()
 export class DeletePostInput {
-  @Field(() => Int)
-  id: number;
+  @Field()
+  slug: string;
 }
 
 @InputType()

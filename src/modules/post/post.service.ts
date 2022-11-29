@@ -71,7 +71,7 @@ export class PostService {
   }
 
   async delete(payload: DeletePostInput) {
-    return await this.PostModel.delete({ id: payload.id });
+    return await this.PostModel.delete({ slug: payload.slug });
   }
 
   async getAllTag() {
