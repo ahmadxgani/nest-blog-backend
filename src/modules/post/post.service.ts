@@ -57,7 +57,7 @@ export class PostService {
 
   async update(payload: UpdatePostInput) {
     const post = (await this.PostModel.findOneBy({
-      id: payload.id,
+      slug: payload.slug,
     })) as Post;
 
     post.title = payload.title;

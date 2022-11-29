@@ -87,7 +87,7 @@ export class PostResolver {
     @Args('payload')
     payload: UpdatePostInput,
   ) {
-    return await this.postService.update({
+    return this.postService.update({
       ...payload,
       slug: payload.slug ? payload.slug : Slugify(payload.title),
     });
