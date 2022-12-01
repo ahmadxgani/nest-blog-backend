@@ -10,7 +10,7 @@ export class CreatePostInput {
   @Field()
   content: string;
 
-  @Field()
+  @Field({ nullable: true })
   slug: string;
 
   @Field({ nullable: true })
@@ -34,6 +34,12 @@ export class GetPostInput {
 @InputType()
 export class GetPostByIdInput {
   @Field()
+  id: number;
+}
+
+@InputType()
+export class GetPostBySlugInput {
+  @Field()
   slug: string;
 }
 
@@ -46,4 +52,7 @@ export class DeletePostInput {
 @InputType()
 export class UpdatePostInput extends OmitType(CreatePostInput, [
   'author',
-] as const) {}
+] as const) {
+  @Field(() => Int)
+  id: number;
+}

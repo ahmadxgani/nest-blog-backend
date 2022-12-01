@@ -5,7 +5,7 @@ import { Author as InjectAuthor } from 'src/decorator/author.decorator';
 import {
   CreatePostInput,
   DeletePostInput,
-  GetPostByIdInput,
+  GetPostBySlugInput,
   UpdatePostInput,
 } from './post.input';
 import {
@@ -65,8 +65,8 @@ export class PostResolver {
 
   @Query(() => Post)
   @Public()
-  async GetPost(@Args('payload') payload: GetPostByIdInput) {
-    return await this.postService.readById(payload.slug);
+  async GetPost(@Args('payload') payload: GetPostBySlugInput) {
+    return await this.postService.read('slug', payload.slug);
   }
 
   @Mutation(() => Post)

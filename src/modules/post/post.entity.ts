@@ -16,6 +16,7 @@ import { Tag } from './tag.entity';
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn()
+  @Field(() => Int)
   id: number;
 
   @Field()

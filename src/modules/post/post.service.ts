@@ -42,22 +42,30 @@ export class PostService {
   }
 
   async read<T>(key: string, value?: T | any) {
-    return await this.PostModel.findOneBy({ [key]: value });
+    return await this.PostModel.findOne({
+      where: {
+        [key]: value,
+      },
+      relations: {
+        tags: true,
+        author: true,
+      },
+    });
   }
 
-  async readById(slug: string) {
+  async readById(id: number) {
     return await this.PostModel.findOne({
       relations: {
         tags: true,
         author: true,
       },
-      where: { slug },
+      where: { id },
     });
   }
 
   async update(payload: UpdatePostInput) {
     const post = (await this.PostModel.findOneBy({
-      slug: payload.slug,
+      id: payload.id,
     })) as Post;
 
     post.title = payload.title;

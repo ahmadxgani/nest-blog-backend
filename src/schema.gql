@@ -23,7 +23,7 @@ input CreateAuthorInput {
 input CreatePostInput {
   content: String!
   draft: Boolean
-  slug: String!
+  slug: String
   tags: [Int!]
   title: String!
 }
@@ -57,7 +57,7 @@ input GetByTagInput {
   name: String!
 }
 
-input GetPostByIdInput {
+input GetPostBySlugInput {
   slug: String!
 }
 
@@ -92,6 +92,7 @@ type Post {
   author: Author!
   content: String!
   createdAt: DateTime!
+  id: Int!
   likes: Int!
   slug: String!
   tags: [Tag!]!
@@ -101,7 +102,7 @@ type Post {
 
 type Query {
   GetAuthorById(payload: GetAuthorInput!): Author!
-  GetPost(payload: GetPostByIdInput!): Post!
+  GetPost(payload: GetPostBySlugInput!): Post!
   ShowAllAuthor: [Author!]!
   ShowAllPost: [Post!]!
   ShowAllTag: [Tag!]!
@@ -128,7 +129,8 @@ input UpdateAuthorInput {
 input UpdatePostInput {
   content: String!
   draft: Boolean
-  slug: String!
+  id: Int!
+  slug: String
   tags: [Int!]
   title: String!
 }
