@@ -36,7 +36,10 @@ export class Author {
   password: string;
 
   @Field(() => [Post])
-  @OneToMany(() => Post, (post) => post.author, { eager: true })
+  @OneToMany(() => Post, (post) => post.author, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   posts: Post[];
 
   @Field()
