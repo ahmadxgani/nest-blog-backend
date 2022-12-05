@@ -84,7 +84,6 @@ type Mutation {
   UpdateAuthor(payload: UpdateAuthorInput!): Author!
   UpdatePost(payload: UpdatePostInput!): Post!
   UpdateTag(payload: UpdateTagInput!): Tag!
-  login(payload: LoginInput!): LoginType!
 }
 
 """Post model"""
@@ -107,6 +106,7 @@ type Query {
   ShowAllPost: [Post!]!
   ShowAllTag: [Tag!]!
   ShowByTag(payload: GetByTagInput!): Tag!
+  login(payload: LoginInput!): LoginType!
 }
 
 """Return Response Type"""

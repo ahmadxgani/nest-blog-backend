@@ -42,7 +42,7 @@ export class AuthorResolver {
   async DeleteAuthor(@Args('payload') payload: DeleteAuthorInput) {
     await this.authorService.delete(payload);
     return {
-      response: true,
+      success: true,
     };
   }
 }
