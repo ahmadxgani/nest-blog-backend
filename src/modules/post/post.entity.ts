@@ -28,7 +28,9 @@ export class Post {
   content: string;
 
   @Field(() => Author)
-  @ManyToOne(() => Author, (author) => author.posts)
+  @ManyToOne(() => Author, (author) => author.posts, {
+    onDelete: 'CASCADE',
+  })
   author: Author;
 
   @Column({ default: true })

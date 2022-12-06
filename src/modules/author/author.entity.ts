@@ -38,7 +38,7 @@ export class Author {
   @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.author, {
     eager: true,
-    onDelete: 'CASCADE',
+    cascade: true,
   })
   posts: Post[];
 
