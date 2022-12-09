@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { roles } from 'src/interface/role.interface';
+import { roles } from '../../interface/role.interface';
 import { Post } from '../post/post.entity';
 
 registerEnumType(roles, { name: 'roles' });
