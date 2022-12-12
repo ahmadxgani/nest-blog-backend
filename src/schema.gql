@@ -61,6 +61,18 @@ input GetPostBySlugInput {
   slug: String!
 }
 
+type Image {
+  asset_id: String!
+  bytes: Float!
+  created_at: String!
+  format: String!
+  height: Float!
+  public_id: String!
+  resource_type: String!
+  secure_url: String!
+  width: Float!
+}
+
 input LoginInput {
   email: String!
   password: String!
@@ -84,6 +96,7 @@ type Mutation {
   UpdateAuthor(payload: UpdateAuthorInput!): Author!
   UpdatePost(payload: UpdatePostInput!): Post!
   UpdateTag(payload: UpdateTagInput!): Tag!
+  uploadFile(file: Upload!): Image!
 }
 
 """Post model"""
@@ -106,6 +119,7 @@ type Query {
   ShowAllPost: [Post!]!
   ShowAllTag: [Tag!]!
   ShowByTag(payload: GetByTagInput!): Tag!
+  image: Boolean!
   login(payload: LoginInput!): LoginType!
 }
 
@@ -139,6 +153,9 @@ input UpdateTagInput {
   id: Int!
   name: String!
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 enum roles {
   admin

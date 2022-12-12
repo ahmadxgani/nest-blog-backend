@@ -6,8 +6,7 @@ import {
   OmitType,
   PickType,
 } from '@nestjs/graphql';
-// import type { FileUpload } from 'graphql-upload';
-// import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
+
 @InputType()
 export class CreateAuthorInput {
   @Field()
@@ -18,10 +17,6 @@ export class CreateAuthorInput {
 
   @Field()
   password: string;
-
-  // @Field(() => GraphQLUpload)
-  // @Field(async () => (await import('graphql-upload/GraphQLUpload.mjs')).default)
-  // image: Promise<FileUpload>;
 }
 
 @InputType()

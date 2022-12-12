@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
 import { AuthModule } from './modules/auth/auth.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ImageModule } from './modules/image/image.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     PostModule,
     AuthorModule,
     AuthModule,
+    ImageModule,
   ],
 })
 export class AppModule {}
