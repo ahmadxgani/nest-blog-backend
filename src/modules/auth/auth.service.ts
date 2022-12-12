@@ -12,19 +12,12 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  private _createToken(payload: Author) {
-    const token = this.jwtService.sign({ ...payload });
-    return {
-      expiresIn: process.env.EXPIRES_IN,
-      id: payload.id,
-      token,
-      username: payload.username,
-      email: payload.email,
-    };
+  private _createToken(email: string) {
+    return this.jwtService.sign({ email, expiresIn: process.env.EXPIRES_IN });
   }
 
-  validate(payload: Author) {
-    return this.authorService.read('id', payload.id);
+  validate(payload: string) {
+    return this.authorService.read('email', payload);
   }
 
   async login(payload: LoginInput) {
@@ -38,6 +31,13 @@ export class AuthService {
     const match = await bcrypt.compare(payload.password, author.password);
     if (!match)
       throw new HttpException('wrong password', HttpStatus.UNAUTHORIZED);
-    return this._createToken(author);
+    const token = this._createToken(author.email);
+    return {
+      expiresIn: process.env.EXPIRES_IN,
+      id: author.id,
+      token,
+      username: author.username,
+      email: author.email,
+    };
   }
 }
