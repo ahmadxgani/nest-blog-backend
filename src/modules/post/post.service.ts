@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
+import { Author } from '../author/author.entity';
 import { Post } from './post.entity';
 import {
   CreatePostInput,
@@ -41,7 +42,7 @@ export class PostService {
     return await this.PostModel.save(post);
   }
 
-  async read<T>(key: string, value?: T | any) {
+  async read<T>(key: string, value: T) {
     return await this.PostModel.findOne({
       where: {
         [key]: value,
@@ -63,9 +64,12 @@ export class PostService {
     });
   }
 
-  async update(payload: UpdatePostInput) {
+  async update(payload: UpdatePostInput, author: Author) {
     const post = (await this.PostModel.findOneBy({
       id: payload.id,
+      author: {
+        email: author.email,
+      },
     })) as Post;
 
     post.title = payload.title || post.title;
@@ -78,8 +82,11 @@ export class PostService {
     return await this.PostModel.save(post);
   }
 
-  async delete(payload: DeletePostInput) {
-    return await this.PostModel.delete({ slug: payload.slug });
+  async delete(payload: DeletePostInput, author: Author) {
+    return await this.PostModel.delete({
+      slug: payload.slug,
+      author: { email: author.email },
+    });
   }
 
   async getAllTag() {

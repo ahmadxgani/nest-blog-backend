@@ -18,12 +18,15 @@ import { Post } from './post.entity';
 import { PostService } from './post.service';
 import { Tag } from './tag.entity';
 import { Public } from 'src/decorator/public.decorator';
+import { roles } from 'src/interface/role.interface';
+import { Auth } from 'src/decorator/auth.decorator';
 
 @Resolver(() => Post)
 export class PostResolver {
   constructor(private postService: PostService) {}
 
   @Query(() => [Tag])
+  @Auth(roles.admin)
   async ShowAllTag() {
     return await this.postService.getAllTag();
   }
@@ -34,6 +37,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Tag)
+  @Auth(roles.admin)
   async CreateTag(
     @Args('payload')
     payload: CreateTagInput,
@@ -42,6 +46,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Tag)
+  @Auth(roles.admin)
   async UpdateTag(
     @Args('payload')
     payload: UpdateTagInput,
@@ -50,6 +55,7 @@ export class PostResolver {
   }
 
   @Mutation(() => ResponseType)
+  @Auth(roles.admin)
   async DeleteTag(@Args('payload') payload: DeleteTagInput) {
     await this.postService.deleteTag(payload);
     return {
@@ -86,16 +92,23 @@ export class PostResolver {
   async UpdatePost(
     @Args('payload')
     payload: UpdatePostInput,
+    @InjectAuthor() author: Author,
   ) {
-    return this.postService.update({
-      ...payload,
-      slug: payload.slug ? payload.slug : Slugify(payload.title),
-    });
+    return this.postService.update(
+      {
+        ...payload,
+        slug: payload.slug ? payload.slug : Slugify(payload.title),
+      },
+      author,
+    );
   }
 
   @Mutation(() => ResponseType)
-  async DeletePost(@Args('payload') payload: DeletePostInput) {
-    await this.postService.delete(payload);
+  async DeletePost(
+    @Args('payload') payload: DeletePostInput,
+    @InjectAuthor() author: Author,
+  ) {
+    await this.postService.delete(payload, author);
     return {
       success: true,
     };
