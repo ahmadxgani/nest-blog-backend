@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ApolloError } from 'apollo-server-core';
 import { Repository, In } from 'typeorm';
 import { Author } from '../author/author.entity';
 import { Post } from './post.entity';
@@ -65,12 +66,14 @@ export class PostService {
   }
 
   async update(payload: UpdatePostInput, author: Author) {
-    const post = (await this.PostModel.findOneBy({
+    const post = await this.PostModel.findOneBy({
       id: payload.id,
       author: {
         email: author.email,
       },
-    })) as Post;
+    });
+
+    if (!post) throw new ApolloError('Bad Payload', '400');
 
     post.title = payload.title || post.title;
     post.content = payload.content || post.content;
@@ -83,10 +86,14 @@ export class PostService {
   }
 
   async delete(payload: DeletePostInput, author: Author) {
-    return await this.PostModel.delete({
-      slug: payload.slug,
-      author: { email: author.email },
-    });
+    try {
+      return await this.PostModel.delete({
+        slug: payload.slug,
+        author: { email: author.email },
+      });
+    } catch (_) {
+      throw new ApolloError('Bad Payload', '400');
+    }
   }
 
   async getAllTag() {
