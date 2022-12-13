@@ -26,7 +26,6 @@ export class PostResolver {
   constructor(private postService: PostService) {}
 
   @Query(() => [Tag])
-  @Auth(roles.admin)
   async ShowAllTag() {
     return await this.postService.getAllTag();
   }
