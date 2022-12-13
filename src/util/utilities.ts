@@ -1,8 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-export function Slugify(title: string) {
+export function Slugify(title?: string) {
   return title
-    .toString()
+    ?.toString()
     .toLowerCase()
     .replace(/\s+/g, '-')
     .replace(/[^\w\-]+/g, '')

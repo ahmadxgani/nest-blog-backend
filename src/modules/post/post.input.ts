@@ -1,4 +1,12 @@
-import { Field, InputType, Int, OmitType } from '@nestjs/graphql';
+import {
+  Field,
+  InputType,
+  Int,
+  IntersectionType,
+  OmitType,
+  PartialType,
+  PickType,
+} from '@nestjs/graphql';
 import { Author } from '../author/author.entity';
 import { Tag } from './tag.entity';
 
@@ -50,9 +58,9 @@ export class DeletePostInput {
 }
 
 @InputType()
-export class UpdatePostInput extends OmitType(CreatePostInput, [
-  'author',
-] as const) {
+export class UpdatePostInput extends PartialType(
+  OmitType(CreatePostInput, ['author'] as const),
+) {
   @Field(() => Int)
   id: number;
 }

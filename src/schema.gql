@@ -141,12 +141,12 @@ input UpdateAuthorInput {
 }
 
 input UpdatePostInput {
-  content: String!
+  content: String
   draft: Boolean
   id: Int!
   slug: String
   tags: [Int!]
-  title: String!
+  title: String
 }
 
 input UpdateTagInput {

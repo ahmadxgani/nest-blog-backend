@@ -68,9 +68,9 @@ export class PostService {
       id: payload.id,
     })) as Post;
 
-    post.title = payload.title;
-    post.content = payload.content;
-    post.slug = payload.slug as string;
+    post.title = payload.title || post.title;
+    post.content = payload.content || post.content;
+    post.slug = payload.slug || post.slug;
     post.tags = await this.TagModel.find({
       where: { id: In(payload.tags || []) },
     });

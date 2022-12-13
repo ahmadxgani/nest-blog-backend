@@ -77,7 +77,7 @@ export class PostResolver {
   ) {
     return await this.postService.create({
       ...payload,
-      slug: payload.slug ? payload.slug : Slugify(payload.title),
+      slug: payload.slug ? payload.slug : (Slugify(payload.title) as string),
       author: author,
     });
   }
