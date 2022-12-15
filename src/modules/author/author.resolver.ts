@@ -10,7 +10,7 @@ import { AuthorService } from './author.service';
 import { roles } from 'src/interface/role.interface';
 import { Auth } from '../../decorator/auth.decorator';
 import { Public } from 'src/decorator/public.decorator';
-import { ResponseType } from 'src/util/utilities';
+import { ResponseType } from 'src/classType/delete.classType';
 
 @Resolver(() => Author)
 export class AuthorResolver {

@@ -8,7 +8,7 @@ import {
   PickType,
 } from '@nestjs/graphql';
 import { Author } from '../author/author.entity';
-import { Tag } from './tag.entity';
+import { Tag } from '../../tag/tag.entity';
 
 @InputType()
 export class CreatePostInput {

@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Post } from './post.entity';
+import { Post } from '../modules/post/post.entity';
 
 @ObjectType({ description: 'Tag model' })
 @Entity()

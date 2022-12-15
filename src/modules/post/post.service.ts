@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApolloError } from 'apollo-server-core';
+import { Tag } from 'src/tag/tag.entity';
 import { Repository, In } from 'typeorm';
 import { Author } from '../author/author.entity';
 import { Post } from './post.entity';
@@ -9,8 +10,6 @@ import {
   DeletePostInput,
   UpdatePostInput,
 } from './post.input';
-import { Tag } from './tag.entity';
-import { CreateTagInput, DeleteTagInput, UpdateTagInput } from './tag.input';
 
 @Injectable()
 export class PostService {
@@ -29,18 +28,18 @@ export class PostService {
   }
 
   async create(payload: CreatePostInput) {
-    const post = new Post();
-
-    post.title = payload.title;
-    post.content = payload.content;
-    post.slug = payload.slug as string;
-    post.likes = 0;
-    post.author = payload.author;
-    post.tags = await this.TagModel.find({
+    const tags = await this.TagModel.find({
       where: { id: In(payload.tags || []) },
     });
 
-    return await this.PostModel.save(post);
+    return await this.PostModel.save({
+      title: payload.title,
+      content: payload.content,
+      slug: payload.slug,
+      likes: 0,
+      author: payload.author,
+      tags,
+    });
   }
 
   async read<T>(key: string, value: T) {
@@ -94,36 +93,5 @@ export class PostService {
     } catch (_) {
       throw new ApolloError('Bad Payload', '400');
     }
-  }
-
-  async getAllTag() {
-    return await this.TagModel.find({
-      relations: { posts: { author: true } },
-    });
-  }
-
-  async createTag(payload: CreateTagInput) {
-    const tag = new Tag();
-
-    tag.name = payload.name;
-
-    return await this.TagModel.save(tag);
-  }
-
-  async readTag(name: string) {
-    return await this.TagModel.findOne({
-      where: { name },
-      relations: { posts: true },
-    });
-  }
-
-  async updateTag(payload: UpdateTagInput) {
-    const tag = (await this.TagModel.findOneBy({ id: payload.id })) as Tag;
-    tag.name = payload.name;
-    return await this.TagModel.save(tag);
-  }
-
-  async deleteTag(payload: DeleteTagInput) {
-    return await this.TagModel.delete({ id: payload.id });
   }
 }
