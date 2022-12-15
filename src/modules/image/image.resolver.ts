@@ -1,13 +1,7 @@
-import {
-  Args,
-  Mutation,
-  Query,
-  Resolver,
-  Field,
-  ObjectType,
-} from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import type { FileUpload } from 'graphql-upload/processRequest.js';
+import { Image } from 'src/classType/image.classType';
 import { Public } from 'src/decorator/public.decorator';
 import { ImageService } from './image.service';
 
@@ -28,34 +22,4 @@ export class ImageResolver {
   ): Promise<Image> {
     return await this.imageService.Upload(createReadStream);
   }
-}
-
-@ObjectType()
-export class Image {
-  @Field()
-  asset_id: string;
-
-  @Field()
-  public_id: string;
-
-  @Field()
-  width: number;
-
-  @Field()
-  height: number;
-
-  @Field()
-  format: string;
-
-  @Field()
-  resource_type: string;
-
-  @Field()
-  created_at: string;
-
-  @Field()
-  bytes: number;
-
-  @Field()
-  secure_url: string;
 }
