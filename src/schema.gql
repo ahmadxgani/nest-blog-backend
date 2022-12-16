@@ -42,7 +42,7 @@ input DeleteAuthorInput {
 }
 
 input DeletePostInput {
-  slug: String!
+  id: Int!
 }
 
 input DeleteTagInput {

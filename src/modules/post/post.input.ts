@@ -53,8 +53,8 @@ export class GetPostBySlugInput {
 
 @InputType()
 export class DeletePostInput {
-  @Field()
-  slug: string;
+  @Field(() => Int)
+  id: number;
 }
 
 @InputType()

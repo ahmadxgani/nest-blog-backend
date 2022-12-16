@@ -12,6 +12,8 @@ import { Post } from './post.entity';
 import { PostService } from './post.service';
 import { Public } from 'src/decorator/public.decorator';
 import { ResponseType } from 'src/classType/delete.classType';
+import { UseGuards } from '@nestjs/common';
+import { IsOwnedPost } from 'src/guard/isOwnedPost.guard';
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -43,26 +45,21 @@ export class PostResolver {
   }
 
   @Mutation(() => Post)
+  @UseGuards(IsOwnedPost)
   async UpdatePost(
     @Args('payload')
     payload: UpdatePostInput,
-    @InjectAuthor() author: Author,
   ) {
-    return this.postService.update(
-      {
-        ...payload,
-        slug: payload.slug ? payload.slug : Slugify(payload.title),
-      },
-      author,
-    );
+    return this.postService.update({
+      ...payload,
+      slug: payload.slug ? payload.slug : Slugify(payload.title),
+    });
   }
 
   @Mutation(() => ResponseType)
-  async DeletePost(
-    @Args('payload') payload: DeletePostInput,
-    @InjectAuthor() author: Author,
-  ) {
-    await this.postService.delete(payload, author);
+  @UseGuards(IsOwnedPost)
+  async DeletePost(@Args('payload') payload: DeletePostInput) {
+    await this.postService.delete(payload);
     return {
       success: true,
     };

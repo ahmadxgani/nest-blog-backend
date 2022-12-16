@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApolloError } from 'apollo-server-core';
 import { Tag } from 'src/tag/tag.entity';
 import { Repository, In } from 'typeorm';
-import { Author } from '../author/author.entity';
 import { Post } from './post.entity';
 import {
   CreatePostInput,
@@ -64,12 +63,9 @@ export class PostService {
     });
   }
 
-  async update(payload: UpdatePostInput, author: Author) {
+  async update(payload: UpdatePostInput) {
     const post = await this.PostModel.findOneBy({
       id: payload.id,
-      author: {
-        email: author.email,
-      },
     });
 
     if (!post) throw new ApolloError('Bad Payload', '400');
@@ -84,11 +80,10 @@ export class PostService {
     return await this.PostModel.save(post);
   }
 
-  async delete(payload: DeletePostInput, author: Author) {
+  async delete(payload: DeletePostInput) {
     try {
       return await this.PostModel.delete({
-        slug: payload.slug,
-        author: { email: author.email },
+        id: payload.id,
       });
     } catch (_) {
       throw new ApolloError('Bad Payload', '400');
