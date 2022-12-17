@@ -10,7 +10,7 @@ import {
   JoinTable,
 } from 'typeorm';
 import { Author } from '../author/author.entity';
-import { Tag } from '../../tag/tag.entity';
+import { Tag } from '../tag/tag.entity';
 
 @ObjectType({ description: 'Post model' })
 @Entity()

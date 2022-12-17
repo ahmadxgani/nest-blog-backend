@@ -7,6 +7,9 @@
   "repository": {
     "url": "https://github.com/QUERY-GANI/nest-blog.git"
   },
+  "bin": {
+    "crun": "node cli.js"
+  },
   "keywords": [
     "expressjs",
     "nestjs",
@@ -16,8 +19,8 @@
     "typescript"
   ],
   "scripts": {
-    "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed",
-    "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config",
+    "seed:run": "ts-node ./node_modules/@jorgebodega/typeorm-seeding/dist/cli.js -d datasource.ts seed \"./database/seeder/*.seed.ts\"",
+    "schema:drop": "ts-node ./node_modules/typeorm/cli.js schema:drop -d datasource.ts",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -46,20 +49,21 @@
     "apollo-server-core": "^3.10.1",
     "apollo-server-express": "^3.10.1",
     "bcrypt": "^5.0.1",
-    "cloudinary": "^1.32.0",
+    "cloudinary": "^1.33.0",
     "graphql": "^16.5.0",
     "graphql-tools": "^8.3.3",
     "graphql-upload": "^15.0.2",
+    "nest-commander": "^3.3.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "sharp": "^0.31.2",
-    "typeorm-seeding": "^1.6.1"
+    "sharp": "^0.31.2"
   },
   "devDependencies": {
+    "@jorgebodega/typeorm-seeding": "^6.0.0",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",

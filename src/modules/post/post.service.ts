@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApolloError } from 'apollo-server-core';
-import { Tag } from 'src/tag/tag.entity';
+import { Tag } from 'src/modules/tag/tag.entity';
 import { Repository, In } from 'typeorm';
 import { Post } from './post.entity';
 import {

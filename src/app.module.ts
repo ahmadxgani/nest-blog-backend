@@ -10,7 +10,8 @@ import { join } from 'path';
 import { AuthModule } from './modules/auth/auth.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ImageModule } from './modules/image/image.module';
-import { TagModule } from './tag/tag.module';
+import { TagModule } from './modules/tag/tag.module';
+import { SeedModule } from './modules/seed/seed.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { TagModule } from './tag/tag.module';
     AuthModule,
     ImageModule,
     TagModule,
+    SeedModule,
   ],
 })
 export class AppModule {}
