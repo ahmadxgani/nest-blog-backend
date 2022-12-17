@@ -7,9 +7,6 @@
   "repository": {
     "url": "https://github.com/QUERY-GANI/nest-blog.git"
   },
-  "bin": {
-    "crun": "node cli.js"
-  },
   "keywords": [
     "expressjs",
     "nestjs",
@@ -53,7 +50,6 @@
     "graphql": "^16.5.0",
     "graphql-tools": "^8.3.3",
     "graphql-upload": "^15.0.2",
-    "nest-commander": "^3.3.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "pg": "^8.8.0",

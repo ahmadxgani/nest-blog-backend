@@ -11,7 +11,6 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ImageModule } from './modules/image/image.module';
 import { TagModule } from './modules/tag/tag.module';
-import { SeedModule } from './modules/seed/seed.module';
 
 @Module({
   imports: [
@@ -40,7 +39,6 @@ import { SeedModule } from './modules/seed/seed.module';
     AuthModule,
     ImageModule,
     TagModule,
-    SeedModule,
   ],
 })
 export class AppModule {}
