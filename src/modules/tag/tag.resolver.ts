@@ -16,6 +16,8 @@ export class TagResolver {
   constructor(private tagService: TagService) {}
   @Query(() => [Tag])
   async ShowAllTag() {
+    console.log(await this.tagService.getAllTag());
+
     return await this.tagService.getAllTag();
   }
 
