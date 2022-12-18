@@ -4,8 +4,10 @@ import {
   Int,
   IntersectionType,
   OmitType,
+  PartialType,
   PickType,
 } from '@nestjs/graphql';
+import GraphQLUpload, { FileUpload } from 'graphql-upload/GraphQLUpload.js';
 
 @InputType()
 export class CreateAuthorInput {
@@ -27,9 +29,12 @@ export class GetAuthorInput {
 
 @InputType()
 export class UpdateAuthorInput extends IntersectionType(
-  OmitType(CreateAuthorInput, ['email', 'password'] as const),
+  PartialType(OmitType(CreateAuthorInput, ['email', 'password'] as const)),
   GetAuthorInput,
-) {}
+) {
+  @Field(() => GraphQLUpload, { nullable: true })
+  file?: FileUpload;
+}
 
 @InputType()
 export class ChangePasswordInput {

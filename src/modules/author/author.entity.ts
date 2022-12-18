@@ -56,4 +56,12 @@ export class Author {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updatedAt: Date;
+
+  @Field({ nullable: true })
+  @Column({ unique: true, nullable: true })
+  image?: string;
+
+  @Field({ nullable: true })
+  @Column({ unique: true, nullable: true })
+  delete_image?: string;
 }

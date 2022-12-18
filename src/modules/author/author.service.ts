@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Author } from './author.entity';
@@ -9,11 +9,14 @@ import {
   DeleteAuthorInput,
   UpdateAuthorInput,
 } from './author.input';
+import { ApolloError } from 'apollo-server-core';
+import { ImageService } from '../image/image.service';
 
 @Injectable()
 export class AuthorService {
   constructor(
-    @InjectRepository(Author) private AuthorModel: Repository<Author>,
+    @InjectRepository(Author) private readonly AuthorModel: Repository<Author>,
+    @Inject(ImageService) private readonly ImageService: ImageService,
   ) {}
 
   async create(payload: CreateAuthorInput) {
@@ -49,9 +52,31 @@ export class AuthorService {
     const user = await this.AuthorModel.findOneBy({
       id: payload.id,
     });
+    let uploadResult = JSON.parse(JSON.stringify({}));
+    if (payload.file) {
+      console.log(payload.file);
+
+      const uploadImage = await this.ImageService.Upload(
+        payload.file.createReadStream,
+      );
+      uploadResult = JSON.parse(
+        JSON.stringify({
+          image: uploadImage.url,
+          delete_image: uploadImage.delete,
+        }),
+      );
+    }
     if (user) {
-      user.username = payload.username;
-      return await this.AuthorModel.save(user);
+      delete payload.file;
+      console.log(payload);
+
+      return await this.AuthorModel.save({
+        ...payload,
+        ...uploadResult,
+        ...user,
+      });
+    } else {
+      throw new ApolloError('User not found!');
     }
   }
 

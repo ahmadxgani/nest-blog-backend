@@ -11,7 +11,6 @@ export class ImageResolver {
   constructor(protected imageService: ImageService) {}
 
   @Mutation(() => Image)
-  @Public()
   async uploadFile(
     @Args({ name: 'file', type: () => GraphQLUpload })
     { createReadStream }: FileUpload,

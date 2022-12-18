@@ -5,8 +5,10 @@
 """Author model"""
 type Author {
   createdAt: DateTime!
+  delete_image: String
   email: String!
   id: Float!
+  image: String
   password: String!
   posts: [Post!]!
   role: roles!
@@ -130,8 +132,9 @@ type Tag {
 }
 
 input UpdateAuthorInput {
+  file: Upload
   id: Int!
-  username: String!
+  username: String
 }
 
 input UpdatePostInput {

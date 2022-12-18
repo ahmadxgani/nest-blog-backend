@@ -7,10 +7,12 @@ import { AuthorService } from './author.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
 import { PassportGuard } from '../../guard/passport.guard';
+import { ImageModule } from '../image/image.module';
 @Module({
   imports: [
     forwardRef(() => AuthModule),
     forwardRef(() => PostModule),
+    ImageModule,
     TypeOrmModule.forFeature([Author]),
   ],
   providers: [
