@@ -6,14 +6,9 @@ import { Image } from 'src/classType/image.classType';
 import { Public } from 'src/decorator/public.decorator';
 import { ImageService } from './image.service';
 
-@Resolver()
+@Resolver(() => Image)
 export class ImageResolver {
   constructor(protected imageService: ImageService) {}
-
-  @Query(() => Boolean)
-  async image(): Promise<boolean> {
-    return true;
-  }
 
   @Mutation(() => Image)
   @Public()

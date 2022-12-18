@@ -61,6 +61,7 @@ input GetPostBySlugInput {
   slug: String!
 }
 
+"""Image class-type"""
 type Image {
   delete: String!
   status: Float!
@@ -113,7 +114,6 @@ type Query {
   ShowAllPost: [Post!]!
   ShowAllTag: [Tag!]!
   ShowByTag(payload: GetByTagInput!): Tag!
-  image: Boolean!
   login(payload: LoginInput!): LoginType!
 }
 
