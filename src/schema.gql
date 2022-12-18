@@ -62,15 +62,9 @@ input GetPostBySlugInput {
 }
 
 type Image {
-  asset_id: String!
-  bytes: Float!
-  created_at: String!
-  format: String!
-  height: Float!
-  public_id: String!
-  resource_type: String!
-  secure_url: String!
-  width: Float!
+  delete: String!
+  status: Float!
+  url: String!
 }
 
 input LoginInput {

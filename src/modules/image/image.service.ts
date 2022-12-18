@@ -1,37 +1,44 @@
 import { Injectable } from '@nestjs/common';
-import { UploadApiResponse, v2 } from 'cloudinary';
+import axios from 'axios';
 import { FileUploadCreateReadStream } from 'graphql-upload/processRequest.js';
 import sharp from 'sharp';
-import type { Stream } from 'stream';
-
-const cloudinaryConfig = {
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-};
+import { Stream } from 'stream';
+import FormData from 'form-data';
 
 @Injectable()
 export class ImageService {
   async Upload(createReadStream: FileUploadCreateReadStream): Promise<any> {
-    v2.config(cloudinaryConfig);
-
-    async function uploader(fileStream: Stream): Promise<UploadApiResponse> {
+    async function uploader(fileStream: Stream): Promise<any> {
       return new Promise(async (resolve, reject) => {
-        const uploadStream = v2.uploader.upload_stream(
-          {
-            folder: 'public',
-          },
-          (error, result) => {
-            if (error) {
-              reject(error);
-            }
-            resolve(result as UploadApiResponse);
-          },
-        );
-        const pipeline = sharp();
-        pipeline.resize(500).webp().pipe(uploadStream);
+        const formData = new FormData();
 
-        fileStream.pipe(pipeline);
+        formData.append('image', fileStream, 'test.jpg');
+        try {
+          const uploadStream = await axios.post(
+            `${process.env.API_URI}?key=${process.env.API_KEY}`,
+            formData,
+            {
+              headers: formData.getHeaders(),
+            },
+          );
+          const data = uploadStream.data.data;
+          if (uploadStream.data.status === 200) {
+            resolve({
+              status: uploadStream.data.status,
+              url: data.url,
+              delete: data.delete_url,
+            });
+          } else {
+            throw new Error('Failed to Upload');
+          }
+        } catch (error) {
+          reject(error);
+        }
+
+        // const pipeline = sharp();
+        // pipeline.resize(500).webp().pipe(fileStream);
+
+        // fileStream.pipe(pipeline);
       });
     }
 

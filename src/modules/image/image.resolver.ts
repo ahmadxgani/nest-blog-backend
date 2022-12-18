@@ -1,4 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { ApolloError } from 'apollo-server-express';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import type { FileUpload } from 'graphql-upload/processRequest.js';
 import { Image } from 'src/classType/image.classType';
@@ -20,6 +21,10 @@ export class ImageResolver {
     @Args({ name: 'file', type: () => GraphQLUpload })
     { createReadStream }: FileUpload,
   ): Promise<Image> {
-    return await this.imageService.Upload(createReadStream);
+    try {
+      return await this.imageService.Upload(createReadStream);
+    } catch (error) {
+      throw new ApolloError(error, '400');
+    }
   }
 }
