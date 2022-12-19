@@ -11,6 +11,8 @@ import { roles } from 'src/interface/role.interface';
 import { Auth } from '../../decorator/auth.decorator';
 import { Public } from 'src/decorator/public.decorator';
 import { ResponseType } from 'src/classType/delete.classType';
+import { FileUpload } from 'graphql-upload/processRequest.js';
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 
 @Resolver(() => Author)
 export class AuthorResolver {
@@ -34,8 +36,12 @@ export class AuthorResolver {
   }
 
   @Mutation(() => Author)
-  async UpdateAuthor(@Args('payload') payload: UpdateAuthorInput) {
-    return this.authorService.update(payload);
+  async UpdateAuthor(
+    @Args('payload') payload: UpdateAuthorInput,
+    @Args({ name: 'file', type: () => GraphQLUpload, nullable: true })
+    { createReadStream }: FileUpload,
+  ) {
+    return await this.authorService.update(payload, createReadStream);
   }
 
   @Mutation(() => ResponseType)

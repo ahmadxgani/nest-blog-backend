@@ -31,10 +31,7 @@ export class GetAuthorInput {
 export class UpdateAuthorInput extends IntersectionType(
   PartialType(OmitType(CreateAuthorInput, ['email', 'password'] as const)),
   GetAuthorInput,
-) {
-  @Field(() => GraphQLUpload, { nullable: true })
-  file?: FileUpload;
-}
+) {}
 
 @InputType()
 export class ChangePasswordInput {

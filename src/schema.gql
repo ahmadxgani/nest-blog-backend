@@ -90,7 +90,7 @@ type Mutation {
   DeleteAuthor(payload: DeleteAuthorInput!): ResponseType!
   DeletePost(payload: DeletePostInput!): ResponseType!
   DeleteTag(payload: DeleteTagInput!): ResponseType!
-  UpdateAuthor(payload: UpdateAuthorInput!): Author!
+  UpdateAuthor(file: Upload, payload: UpdateAuthorInput!): Author!
   UpdatePost(payload: UpdatePostInput!): Post!
   UpdateTag(payload: UpdateTagInput!): Tag!
   uploadFile(file: Upload!): Image!
@@ -132,7 +132,6 @@ type Tag {
 }
 
 input UpdateAuthorInput {
-  file: Upload
   id: Int!
   username: String
 }

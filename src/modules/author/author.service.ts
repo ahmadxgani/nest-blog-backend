@@ -11,6 +11,7 @@ import {
 } from './author.input';
 import { ApolloError } from 'apollo-server-core';
 import { ImageService } from '../image/image.service';
+import { FileUploadCreateReadStream } from 'graphql-upload/processRequest.js';
 
 @Injectable()
 export class AuthorService {
@@ -48,17 +49,18 @@ export class AuthorService {
     });
   }
 
-  async update(payload: UpdateAuthorInput) {
+  async update(
+    payload: UpdateAuthorInput,
+    createReadStream?: FileUploadCreateReadStream,
+  ) {
     const user = await this.AuthorModel.findOneBy({
       id: payload.id,
     });
     let uploadResult = JSON.parse(JSON.stringify({}));
-    if (payload.file) {
-      console.log(payload.file);
+    if (createReadStream) {
+      const uploadImage = await this.ImageService.Upload(createReadStream);
+      console.log(uploadImage);
 
-      const uploadImage = await this.ImageService.Upload(
-        payload.file.createReadStream,
-      );
       uploadResult = JSON.parse(
         JSON.stringify({
           image: uploadImage.url,
@@ -67,13 +69,10 @@ export class AuthorService {
       );
     }
     if (user) {
-      delete payload.file;
-      console.log(payload);
-
       return await this.AuthorModel.save({
         ...payload,
-        ...uploadResult,
         ...user,
+        ...uploadResult,
       });
     } else {
       throw new ApolloError('User not found!');

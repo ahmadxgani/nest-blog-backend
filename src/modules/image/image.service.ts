@@ -41,7 +41,6 @@ export class ImageService {
         // fileStream.pipe(pipeline);
       });
     }
-    console.log(createReadStream);
 
     return uploader(createReadStream());
   }
