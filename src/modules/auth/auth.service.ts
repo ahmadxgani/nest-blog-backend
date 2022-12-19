@@ -37,6 +37,8 @@ export class AuthService {
       token,
       username: author.username,
       email: author.email,
+      image: author.image,
+      delete_image: author.delete_image,
     };
   }
 }

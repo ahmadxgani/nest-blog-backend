@@ -76,9 +76,11 @@ input LoginInput {
 }
 
 type LoginType {
+  delete_image: String
   email: String!
   expiresIn: String!
   id: Int!
+  image: String
   token: String!
   username: String!
 }

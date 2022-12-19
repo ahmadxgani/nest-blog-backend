@@ -16,4 +16,10 @@ export class LoginType {
 
   @Field()
   email: string;
+
+  @Field({ nullable: true })
+  image: string;
+
+  @Field({ nullable: true })
+  delete_image: string;
 }
