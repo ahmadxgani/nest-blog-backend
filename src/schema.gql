@@ -59,6 +59,10 @@ input GetByTagInput {
   name: String!
 }
 
+input GetLikePost {
+  id: Int!
+}
+
 input GetPostBySlugInput {
   slug: String!
 }
@@ -68,6 +72,15 @@ type Image {
   delete: String!
   status: Float!
   url: String!
+}
+
+"""Like Post Model"""
+type LikePost {
+  isLiked: Boolean!
+}
+
+input LikePostInput {
+  idPost: Int!
 }
 
 input LoginInput {
@@ -92,6 +105,7 @@ type Mutation {
   DeleteAuthor(payload: DeleteAuthorInput!): ResponseType!
   DeletePost(payload: DeletePostInput!): ResponseType!
   DeleteTag(payload: DeleteTagInput!): ResponseType!
+  LikePost(payload: LikePostInput!): Post!
   UpdateAuthor(file: Upload, payload: UpdateAuthorInput!): Author!
   UpdatePost(payload: UpdatePostInput!): Post!
   UpdateTag(payload: UpdateTagInput!): Tag!
@@ -114,6 +128,7 @@ type Post {
 type Query {
   GetAuthorById(payload: GetAuthorInput!): Author!
   GetPost(payload: GetPostBySlugInput!): Post!
+  LikedPost(payload: GetLikePost!): LikePost
   ShowAllAuthor: [Author!]!
   ShowAllPost: [Post!]!
   ShowAllTag: [Tag!]!

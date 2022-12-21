@@ -1,14 +1,12 @@
-import {
-  Field,
-  InputType,
-  Int,
-  IntersectionType,
-  OmitType,
-  PartialType,
-  PickType,
-} from '@nestjs/graphql';
+import { Field, InputType, Int, OmitType, PartialType } from '@nestjs/graphql';
 import { Author } from '../author/author.entity';
 import { Tag } from '../tag/tag.entity';
+
+@InputType()
+export class LikePostInput {
+  @Field(() => Int)
+  idPost: number;
+}
 
 @InputType()
 export class CreatePostInput {
@@ -49,6 +47,12 @@ export class GetPostByIdInput {
 export class GetPostBySlugInput {
   @Field()
   slug: string;
+}
+
+@InputType()
+export class GetLikePost {
+  @Field(() => Int)
+  id: number;
 }
 
 @InputType()
