@@ -121,6 +121,7 @@ type Mutation {
 """Post model"""
 type Post {
   author: Author!
+  bookmark: BookmarkPost!
   content: String!
   createdAt: DateTime!
   id: Int!
@@ -140,6 +141,7 @@ type Query {
   ShowAllTag: [Tag!]!
   ShowByTag(payload: GetByTagInput!): Tag!
   getMyBookmark: [Post!]!
+  isPostBookmarked(payload: IdPostInput!): BookmarkPost!
   login(payload: LoginInput!): LoginType!
 }
 

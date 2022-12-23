@@ -8,9 +8,11 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 import { Author } from '../author/author.entity';
 import { Tag } from '../tag/tag.entity';
+import { BookmarkPost } from './bookmark.entity';
 
 @ObjectType({ description: 'Post model' })
 @Entity()
@@ -35,6 +37,10 @@ export class Post {
 
   @Column({ default: true })
   draft: boolean;
+
+  @Field(() => BookmarkPost)
+  @OneToMany(() => BookmarkPost, (bookmark) => bookmark.post)
+  bookmark: BookmarkPost;
 
   @Field()
   @Column({ unique: true })

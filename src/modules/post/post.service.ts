@@ -181,6 +181,16 @@ export class PostService {
     });
   }
 
+  async checkIfPostBookmarked(idPost: number) {
+    return await this.BookmarkModel.findOne({
+      where: {
+        post: {
+          id: idPost,
+        },
+      },
+    });
+  }
+
   async read<T>(key: string, value: T) {
     return await this.PostModel.findOne({
       where: {
@@ -226,6 +236,7 @@ export class PostService {
         id: payload.id,
       });
     } catch (_) {
+      console.log(_);
       throw new ApolloError('Bad Payload', '400');
     }
   }

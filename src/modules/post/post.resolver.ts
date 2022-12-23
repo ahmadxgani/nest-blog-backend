@@ -47,7 +47,12 @@ export class PostResolver {
 
   @Query(() => [Post])
   async getMyBookmark(@InjectAuthor() author: Author) {
-    return await this.postService.getAuthorBookmark(author.id)
+    return await this.postService.getAuthorBookmark(author.id);
+  }
+
+  @Query(() => BookmarkPost)
+  async isPostBookmarked(@Args('payload') payload: IdPostInput) {
+    return this.postService.checkIfPostBookmarked(payload.idPost);
   }
 
   @Query(() => Post)
