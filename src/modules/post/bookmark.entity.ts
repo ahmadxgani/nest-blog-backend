@@ -12,7 +12,7 @@ export class BookmarkPost {
   @ManyToOne(() => Author)
   author: Author;
 
-  @ManyToOne(() => Post)
+  @ManyToOne(() => Post, { onDelete: 'CASCADE' })
   post: Post;
 
   @Field(() => Boolean)
