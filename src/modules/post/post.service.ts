@@ -4,6 +4,7 @@ import { ApolloError } from 'apollo-server-core';
 import { Tag } from 'src/modules/tag/tag.entity';
 import { Repository, In } from 'typeorm';
 import { Author } from '../author/author.entity';
+import { BookmarkPost } from './bookmark.entity';
 import { LikePost } from './like.entity';
 import { Post } from './post.entity';
 import {
@@ -18,6 +19,8 @@ export class PostService {
     @InjectRepository(Post) private PostModel: Repository<Post>,
     @InjectRepository(Tag) private TagModel: Repository<Tag>,
     @InjectRepository(LikePost) private LikeModel: Repository<LikePost>,
+    @InjectRepository(BookmarkPost)
+    private BookmarkModel: Repository<BookmarkPost>,
   ) {}
 
   async getLikePost(postId: number, authorId: number) {
@@ -31,6 +34,74 @@ export class PostService {
         },
       },
     });
+  }
+
+  async getAuthorBookmark(authorId: number) {
+    return (
+      await this.BookmarkModel.find({
+        where: {
+          author: {
+            id: authorId,
+          },
+        },
+        relations: {
+          post: {
+            author: true,
+          },
+        },
+      })
+    ).map((bookmarkList) => bookmarkList.post);
+  }
+
+  async bookmarkPost(postId: number, author: Author) {
+    const post = await this.PostModel.findOne({ where: { id: postId } });
+    if (!post) throw new ApolloError('Post not found!');
+
+    const isPost = await this.BookmarkModel.findOne({
+      where: {
+        post: {
+          id: post.id,
+        },
+        author: {
+          id: author.id,
+        },
+      },
+    });
+
+    if (!isPost) {
+      await this.BookmarkModel.save({ post, author, isBookmarked: false });
+    }
+
+    const isAuthorBookmarkedPost = await this.BookmarkModel.findOne({
+      where: {
+        isBookmarked: false,
+        author: {
+          id: author.id,
+        },
+      },
+      relations: {
+        post: true,
+      },
+    });
+
+    if (!isAuthorBookmarkedPost) {
+      const findBookmarkedPost = await this.BookmarkModel.findOne({
+        where: {
+          author: {
+            id: author.id,
+          },
+        },
+      });
+      if (findBookmarkedPost) {
+        return this.BookmarkModel.save({
+          ...findBookmarkedPost,
+          isBookmarked: false,
+        });
+      }
+    } else {
+      isAuthorBookmarkedPost.isBookmarked = true;
+      return this.BookmarkModel.save(isAuthorBookmarkedPost);
+    }
   }
 
   async likePost(postId: number, author: Author) {

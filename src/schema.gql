@@ -16,6 +16,11 @@ type Author {
   username: String!
 }
 
+"""Like Post Model"""
+type BookmarkPost {
+  isBookmarked: Boolean!
+}
+
 input CreateAuthorInput {
   email: String!
   password: String!
@@ -67,6 +72,10 @@ input GetPostBySlugInput {
   slug: String!
 }
 
+input IdPostInput {
+  idPost: Int!
+}
+
 """Image class-type"""
 type Image {
   delete: String!
@@ -77,10 +86,6 @@ type Image {
 """Like Post Model"""
 type LikePost {
   isLiked: Boolean!
-}
-
-input LikePostInput {
-  idPost: Int!
 }
 
 input LoginInput {
@@ -99,13 +104,14 @@ type LoginType {
 }
 
 type Mutation {
+  BookmarkPost(payload: IdPostInput!): BookmarkPost!
   CreateAuthor(payload: CreateAuthorInput!): Author!
   CreatePost(payload: CreatePostInput!): Post!
   CreateTag(payload: CreateTagInput!): Tag!
   DeleteAuthor(payload: DeleteAuthorInput!): ResponseType!
   DeletePost(payload: DeletePostInput!): ResponseType!
   DeleteTag(payload: DeleteTagInput!): ResponseType!
-  LikePost(payload: LikePostInput!): Post!
+  LikePost(payload: IdPostInput!): Post!
   UpdateAuthor(file: Upload, payload: UpdateAuthorInput!): Author!
   UpdatePost(payload: UpdatePostInput!): Post!
   UpdateTag(payload: UpdateTagInput!): Tag!
@@ -133,6 +139,7 @@ type Query {
   ShowAllPost: [Post!]!
   ShowAllTag: [Tag!]!
   ShowByTag(payload: GetByTagInput!): Tag!
+  getMyBookmark: [Post!]!
   login(payload: LoginInput!): LoginType!
 }
 

@@ -3,7 +3,7 @@ import { Author } from '../author/author.entity';
 import { Tag } from '../tag/tag.entity';
 
 @InputType()
-export class LikePostInput {
+export class IdPostInput {
   @Field(() => Int)
   idPost: number;
 }

@@ -7,12 +7,13 @@ import { PostResolver } from './post.resolver';
 import { PostService } from './post.service';
 import { Tag } from '../tag/tag.entity';
 import { LikePost } from './like.entity';
+import { BookmarkPost } from './bookmark.entity';
 
 @Module({
   imports: [
     forwardRef(() => AuthorModule),
     AuthModule,
-    TypeOrmModule.forFeature([Post, Tag, LikePost]),
+    TypeOrmModule.forFeature([Post, Tag, LikePost, BookmarkPost]),
   ],
   providers: [PostService, PostResolver],
 })

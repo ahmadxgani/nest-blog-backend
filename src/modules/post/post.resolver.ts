@@ -7,7 +7,7 @@ import {
   DeletePostInput,
   GetLikePost,
   GetPostBySlugInput,
-  LikePostInput,
+  IdPostInput,
   UpdatePostInput,
 } from './post.input';
 import { Post } from './post.entity';
@@ -17,6 +17,7 @@ import { ResponseType } from 'src/classType/delete.classType';
 import { UseGuards } from '@nestjs/common';
 import { IsOwnedPost } from 'src/guard/isOwnedPost.guard';
 import { LikePost } from './like.entity';
+import { BookmarkPost } from './bookmark.entity';
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -36,6 +37,19 @@ export class PostResolver {
     return await this.postService.getLikePost(payload.id, author.id);
   }
 
+  @Mutation(() => BookmarkPost)
+  async BookmarkPost(
+    @Args('payload') payload: IdPostInput,
+    @InjectAuthor() author: Author,
+  ) {
+    return await this.postService.bookmarkPost(payload.idPost, author);
+  }
+
+  @Query(() => [Post])
+  async getMyBookmark(@InjectAuthor() author: Author) {
+    return await this.postService.getAuthorBookmark(author.id)
+  }
+
   @Query(() => Post)
   @Public()
   async GetPost(@Args('payload') payload: GetPostBySlugInput) {
@@ -44,7 +58,7 @@ export class PostResolver {
 
   @Mutation(() => Post)
   async LikePost(
-    @Args('payload') payload: LikePostInput,
+    @Args('payload') payload: IdPostInput,
     @InjectAuthor() author: Author,
   ) {
     return await this.postService.likePost(payload.idPost, author);
