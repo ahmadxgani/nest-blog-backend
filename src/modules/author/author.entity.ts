@@ -61,7 +61,15 @@ export class Author {
   @Column({ unique: true, nullable: true })
   image?: string;
 
-  @Field({ nullable: true })
-  @Column({ unique: true, nullable: true })
-  delete_image?: string;
+  @Field()
+  @Column({ default: false })
+  verified: boolean;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true, type: 'varchar' })
+  verifyCode?: string | null;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true, type: 'varchar' })
+  resetPasswordToken?: string | null;
 }

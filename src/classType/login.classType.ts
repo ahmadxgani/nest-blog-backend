@@ -19,7 +19,4 @@ export class LoginType {
 
   @Field({ nullable: true })
   image: string;
-
-  @Field({ nullable: true })
-  delete_image: string;
 }

@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
 import { Author } from './author.entity';
 import { Repository } from 'typeorm';
 import {
@@ -12,6 +11,11 @@ import {
 import { ApolloError } from 'apollo-server-core';
 import { ImageService } from '../image/image.service';
 import { FileUploadCreateReadStream } from 'graphql-upload/processRequest.js';
+import {
+  generateVerifyCode,
+  hashPassword,
+  sendToEmail,
+} from 'src/util/utilities';
 
 @Injectable()
 export class AuthorService {
@@ -21,12 +25,14 @@ export class AuthorService {
   ) {}
 
   async create(payload: CreateAuthorInput) {
-    const salt = await bcrypt.genSalt();
-    const password = await bcrypt.hash(payload.password, salt);
+    const verifyCode = generateVerifyCode();
+    sendToEmail(payload.email, verifyCode);
+    const password = await hashPassword(payload.password);
     const author = new Author();
     author.email = payload.email;
     author.password = password;
     author.username = payload.username;
+    author.verifyCode = verifyCode;
     return this.AuthorModel.save(author);
   }
 
@@ -49,6 +55,20 @@ export class AuthorService {
     });
   }
 
+  async updatePassword(payload: {
+    id: number;
+    newPassword: string;
+    resetPasswordToken?: string | null;
+  }) {
+    return this.AuthorModel.update(
+      { id: payload.id },
+      {
+        password: payload.newPassword,
+        resetPasswordToken: payload.resetPasswordToken,
+      },
+    );
+  }
+
   async update(
     payload: UpdateAuthorInput,
     createReadStream?: FileUploadCreateReadStream,
@@ -59,19 +79,17 @@ export class AuthorService {
     let uploadResult = JSON.parse(JSON.stringify({}));
     if (createReadStream) {
       const uploadImage = await this.ImageService.Upload(createReadStream);
-      console.log(uploadImage);
 
       uploadResult = JSON.parse(
         JSON.stringify({
           image: uploadImage.url,
-          delete_image: uploadImage.delete,
         }),
       );
     }
     if (user) {
       return await this.AuthorModel.save({
-        ...payload,
         ...user,
+        ...payload,
         ...uploadResult,
       });
     } else {
@@ -80,8 +98,7 @@ export class AuthorService {
   }
 
   async changePassword(payload: ChangePasswordInput) {
-    const salt = await bcrypt.genSalt();
-    const password = await bcrypt.hash(payload.password, salt);
+    const password = await hashPassword(payload.password);
     return this.AuthorModel.update(payload.id, { ...payload, password });
   }
 

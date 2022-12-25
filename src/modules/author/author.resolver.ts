@@ -1,5 +1,4 @@
 import {
-  CreateAuthorInput,
   DeleteAuthorInput,
   GetAuthorInput,
   UpdateAuthorInput,
@@ -9,7 +8,6 @@ import { Author } from './author.entity';
 import { AuthorService } from './author.service';
 import { roles } from 'src/interface/role.interface';
 import { Auth } from '../../decorator/auth.decorator';
-import { Public } from 'src/decorator/public.decorator';
 import { ResponseType } from 'src/classType/delete.classType';
 import { FileUpload } from 'graphql-upload/processRequest.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
@@ -17,12 +15,6 @@ import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 @Resolver(() => Author)
 export class AuthorResolver {
   constructor(private authorService: AuthorService) {}
-
-  @Public()
-  @Mutation(() => Author)
-  async CreateAuthor(@Args('payload') payload: CreateAuthorInput) {
-    return await this.authorService.create(payload);
-  }
 
   @Query(() => Author)
   async GetAuthorById(@Args('payload') payload: GetAuthorInput) {

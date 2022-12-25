@@ -5,15 +5,17 @@
 """Author model"""
 type Author {
   createdAt: DateTime!
-  delete_image: String
   email: String!
   id: Float!
   image: String
   password: String!
   posts: [Post!]!
+  resetPasswordToken: String
   role: roles!
   updatedAt: DateTime!
   username: String!
+  verified: Boolean!
+  verifyCode: String
 }
 
 """Like Post Model"""
@@ -56,6 +58,10 @@ input DeleteTagInput {
   id: Int!
 }
 
+input ForgotPasswordInput {
+  email: String!
+}
+
 input GetAuthorInput {
   id: Int!
 }
@@ -94,7 +100,6 @@ input LoginInput {
 }
 
 type LoginType {
-  delete_image: String
   email: String!
   expiresIn: String!
   id: Int!
@@ -103,9 +108,12 @@ type LoginType {
   username: String!
 }
 
+type MessageType {
+  message: String!
+}
+
 type Mutation {
   BookmarkPost(payload: IdPostInput!): BookmarkPost!
-  CreateAuthor(payload: CreateAuthorInput!): Author!
   CreatePost(payload: CreatePostInput!): Post!
   CreateTag(payload: CreateTagInput!): Tag!
   DeleteAuthor(payload: DeleteAuthorInput!): ResponseType!
@@ -115,7 +123,12 @@ type Mutation {
   UpdateAuthor(file: Upload, payload: UpdateAuthorInput!): Author!
   UpdatePost(payload: UpdatePostInput!): Post!
   UpdateTag(payload: UpdateTagInput!): Tag!
+  createAccount(payload: CreateAuthorInput!): Author!
+  resetPassword(payload: ResetPasswordInput!): MessageType!
+  unregisterUser(payload: VerifyEmailInput!): MessageType!
+  updatePassword(payload: UpdatePasswordInput!): MessageType!
   uploadFile(file: Upload!): Image!
+  verifyEmail(payload: VerifyEmailInput!): MessageType!
 }
 
 """Post model"""
@@ -140,9 +153,16 @@ type Query {
   ShowAllPost: [Post!]!
   ShowAllTag: [Tag!]!
   ShowByTag(payload: GetByTagInput!): Tag!
+  forgotPassword(payload: ForgotPasswordInput!): MessageType!
   getMyBookmark: [Post!]!
   isPostBookmarked(payload: IdPostInput!): BookmarkPost!
   login(payload: LoginInput!): LoginType!
+}
+
+input ResetPasswordInput {
+  authorID: Int!
+  newPassword: String!
+  token: String!
 }
 
 """Return Response Type"""
@@ -162,6 +182,11 @@ input UpdateAuthorInput {
   username: String
 }
 
+input UpdatePasswordInput {
+  currentPassword: String!
+  newPassword: String!
+}
+
 input UpdatePostInput {
   content: String
   draft: Boolean
@@ -178,6 +203,10 @@ input UpdateTagInput {
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+input VerifyEmailInput {
+  code: String!
+}
 
 enum roles {
   admin
