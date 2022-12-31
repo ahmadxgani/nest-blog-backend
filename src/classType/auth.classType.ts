@@ -20,3 +20,9 @@ export class LoginType {
   @Field({ nullable: true })
   image: string;
 }
+
+@ObjectType()
+export class MessageType {
+  @Field()
+  message: string;
+}
