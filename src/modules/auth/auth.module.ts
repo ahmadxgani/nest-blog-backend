@@ -1,5 +1,4 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from 'src/jwt/strategy.jwt';
@@ -9,7 +8,6 @@ import { AuthService } from './auth.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
     PassportModule.register({
       defaultStrategy: 'jwt',
       property: 'author',

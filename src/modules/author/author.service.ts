@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import {
   ChangePasswordInput,
   CreateAuthorInput,
-  DeleteAuthorInput,
+  GetAuthorIdInput,
   UpdateAuthorInput,
 } from './author.input';
 import { ApolloError } from 'apollo-server-core';
@@ -102,7 +102,7 @@ export class AuthorService {
     return this.AuthorModel.update(payload.id, { ...payload, password });
   }
 
-  delete({ id }: DeleteAuthorInput) {
+  delete({ id }: GetAuthorIdInput) {
     return this.AuthorModel.delete(id);
   }
 }

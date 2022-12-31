@@ -7,7 +7,6 @@ import {
   PartialType,
   PickType,
 } from '@nestjs/graphql';
-import GraphQLUpload, { FileUpload } from 'graphql-upload/GraphQLUpload.js';
 
 @InputType()
 export class CreateAuthorInput {
@@ -22,7 +21,7 @@ export class CreateAuthorInput {
 }
 
 @InputType()
-export class GetAuthorInput {
+export class GetAuthorIdInput {
   @Field(() => Int)
   id: number;
 }
@@ -30,7 +29,7 @@ export class GetAuthorInput {
 @InputType()
 export class UpdateAuthorInput extends IntersectionType(
   PartialType(OmitType(CreateAuthorInput, ['email', 'password'] as const)),
-  GetAuthorInput,
+  GetAuthorIdInput,
 ) {}
 
 @InputType()
@@ -40,8 +39,3 @@ export class ChangePasswordInput {
   @Field()
   password: string;
 }
-
-@InputType()
-export class DeleteAuthorInput extends PickType(GetAuthorInput, [
-  'id',
-] as const) {}

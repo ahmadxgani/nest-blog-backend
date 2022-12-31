@@ -1,8 +1,4 @@
-import {
-  DeleteAuthorInput,
-  GetAuthorInput,
-  UpdateAuthorInput,
-} from './author.input';
+import { GetAuthorIdInput, UpdateAuthorInput } from './author.input';
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { Author } from './author.entity';
 import { AuthorService } from './author.service';
@@ -17,7 +13,7 @@ export class AuthorResolver {
   constructor(private authorService: AuthorService) {}
 
   @Query(() => Author)
-  async GetAuthorById(@Args('payload') payload: GetAuthorInput) {
+  async GetAuthorById(@Args('payload') payload: GetAuthorIdInput) {
     return await this.authorService.readById(payload.id);
   }
 
@@ -37,7 +33,7 @@ export class AuthorResolver {
   }
 
   @Mutation(() => ResponseType)
-  async DeleteAuthor(@Args('payload') payload: DeleteAuthorInput) {
+  async DeleteAuthor(@Args('payload') payload: GetAuthorIdInput) {
     await this.authorService.delete(payload);
     return {
       success: true,
