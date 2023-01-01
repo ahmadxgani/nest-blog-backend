@@ -2,12 +2,14 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PostModule } from './modules/post/post.module';
-import { AuthorModule } from './modules/author/author.module';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
-import { join } from 'path';
-import { AuthModule } from './modules/auth/auth.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
+import { AuthorModule } from './modules/author/author.module';
+import { PostModule } from './modules/post/post.module';
+import { PassportGuard } from 'src/guard/passport.guard';
+import { AuthModule } from './modules/auth/auth.module';
 import { ImageModule } from './modules/image/image.module';
 import { TagModule } from './modules/tag/tag.module';
 
@@ -39,5 +41,9 @@ import { TagModule } from './modules/tag/tag.module';
     ImageModule,
     TagModule,
   ],
+  providers: [{
+    provide: APP_GUARD,
+    useClass: PassportGuard,
+  }]
 })
 export class AppModule {}

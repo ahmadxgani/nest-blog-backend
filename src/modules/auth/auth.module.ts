@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from 'src/jwt/strategy.jwt';
@@ -19,9 +19,13 @@ import { AuthService } from './auth.service';
         expiresIn: process.env.EXPIRES_IN,
       },
     }),
-    forwardRef(() => AuthorModule),
+    AuthorModule,
   ],
-  providers: [AuthResolver, AuthService, JwtStrategy],
+  providers: [
+    AuthResolver,
+    AuthService,
+    JwtStrategy,
+  ],
   exports: [PassportModule, JwtModule],
 })
 export class AuthModule {}

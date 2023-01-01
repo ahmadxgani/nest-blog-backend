@@ -19,8 +19,7 @@ export class PostService {
     @InjectRepository(Post) private PostModel: Repository<Post>,
     @InjectRepository(Tag) private TagModel: Repository<Tag>,
     @InjectRepository(LikePost) private LikeModel: Repository<LikePost>,
-    @InjectRepository(BookmarkPost)
-    private BookmarkModel: Repository<BookmarkPost>,
+    @InjectRepository(BookmarkPost) private BookmarkModel: Repository<BookmarkPost>,
   ) {}
 
   async getLikePost(postId: number, authorId: number) {

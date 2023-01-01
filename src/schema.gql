@@ -46,10 +46,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-input DeleteAuthorInput {
-  id: Int!
-}
-
 input DeletePostInput {
   id: Int!
 }
@@ -62,7 +58,7 @@ input ForgotPasswordInput {
   email: String!
 }
 
-input GetAuthorInput {
+input GetAuthorIdInput {
   id: Int!
 }
 
@@ -116,7 +112,7 @@ type Mutation {
   BookmarkPost(payload: IdPostInput!): BookmarkPost!
   CreatePost(payload: CreatePostInput!): Post!
   CreateTag(payload: CreateTagInput!): Tag!
-  DeleteAuthor(payload: DeleteAuthorInput!): ResponseType!
+  DeleteAuthor(payload: GetAuthorIdInput!): ResponseType!
   DeletePost(payload: DeletePostInput!): ResponseType!
   DeleteTag(payload: DeleteTagInput!): ResponseType!
   LikePost(payload: IdPostInput!): Post!
@@ -146,7 +142,7 @@ type Post {
 }
 
 type Query {
-  GetAuthorById(payload: GetAuthorInput!): Author!
+  GetAuthorById(payload: GetAuthorIdInput!): Author!
   GetPost(payload: GetPostBySlugInput!): Post!
   LikedPost(payload: GetLikePost!): LikePost
   ShowAllAuthor: [Author!]!

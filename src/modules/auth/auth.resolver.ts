@@ -1,6 +1,6 @@
 import { Author as InjectAuthor } from 'src/decorator/author.decorator';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { LoginType } from 'src/classType/login.classType';
+import { LoginType, MessageType } from 'src/classType/auth.classType';
 import { Public } from 'src/decorator/public.decorator';
 import { Author } from '../author/author.entity';
 import { CreateAuthorInput } from '../author/author.input';
@@ -12,7 +12,6 @@ import {
   VerifyEmailInput,
 } from './auth.input';
 import { AuthService } from './auth.service';
-import { MessageType } from 'src/classType/password.classType';
 
 @Resolver()
 export class AuthResolver {
