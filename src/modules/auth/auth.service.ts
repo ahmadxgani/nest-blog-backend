@@ -24,7 +24,7 @@ export class AuthService {
   ) {}
 
   private _createToken(email: string) {
-    return this.jwtService.sign({ email, expiresIn: process.env.EXPIRES_IN });
+    return this.jwtService.sign({ email });
   }
 
   async create(payload: CreateAuthorInput) {
