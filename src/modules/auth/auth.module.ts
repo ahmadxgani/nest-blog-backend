@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from 'src/jwt/strategy.jwt';
@@ -13,19 +14,18 @@ import { AuthService } from './auth.service';
       property: 'author',
       session: false,
     }),
-    JwtModule.register({
-      secret: process.env.JWT_KEY,
-      signOptions: {
-        expiresIn: process.env.EXPIRES_IN,
-      },
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get<string>('JWT_KEY'),
+        signOptions: {
+          expiresIn: config.get<string>('EXPIRES_IN'),
+        },
+      }),
     }),
-    AuthorModule,
+    forwardRef(() => AuthorModule),
   ],
-  providers: [
-    AuthResolver,
-    AuthService,
-    JwtStrategy,
-  ],
+  providers: [AuthResolver, AuthService, JwtStrategy],
   exports: [PassportModule, JwtModule],
 })
 export class AuthModule {}
