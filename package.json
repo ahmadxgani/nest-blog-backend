@@ -61,7 +61,7 @@
     "sharp": "^0.31.2"
   },
   "devDependencies": {
-    "@jorgebodega/typeorm-seeding": "^6.0.0",
+    "@jorgebodega/typeorm-seeding": "^6.0.1",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",

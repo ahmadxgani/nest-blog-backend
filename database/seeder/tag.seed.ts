@@ -2,10 +2,10 @@ import { Seeder } from '@jorgebodega/typeorm-seeding';
 import type { DataSource } from 'typeorm';
 import { Tag } from '../../src/modules/tag/tag.entity';
 
-export class CreateTag extends Seeder {
+export default class CreateTag extends Seeder {
   public async run(dataSource: DataSource): Promise<void> {
     const tagRepo = dataSource.getRepository(Tag);
-    tagRepo.create(
+    const tags = tagRepo.create(
       [
         'javascript',
         'html',
@@ -19,5 +19,7 @@ export class CreateTag extends Seeder {
         'python',
       ].map((tag) => ({ name: tag })),
     );
+
+    await tagRepo.save(tags);
   }
 }

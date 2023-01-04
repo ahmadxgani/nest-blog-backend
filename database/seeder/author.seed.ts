@@ -2,20 +2,20 @@ import { roles } from '../../src/interface/role.interface';
 import { Author } from '../../src/modules/author/author.entity';
 import { Seeder } from '@jorgebodega/typeorm-seeding';
 import type { DataSource } from 'typeorm';
-import { hashPassword } from 'src/util/utilities';
+import { hashPassword } from '../../src/util/utilities';
 
-export class CreateAuthor extends Seeder {
+export default class CreateAuthor extends Seeder {
   public async run(dataSource: DataSource): Promise<void> {
     const authorRepo = dataSource.getRepository(Author);
     const password = await hashPassword('1234');
-
-    authorRepo.create([
+    const authors = authorRepo.create([
       {
         username: 'super admin',
         email: 'admin@s.com',
         password,
         role: roles.admin,
         posts: [],
+        verified: true,
       },
       {
         username: 'shinigami shinoa',
@@ -23,6 +23,7 @@ export class CreateAuthor extends Seeder {
         password,
         role: roles.member,
         posts: [],
+        verified: true,
       },
       {
         username: 'kuchiki bocchi',
@@ -30,7 +31,10 @@ export class CreateAuthor extends Seeder {
         password,
         role: roles.member,
         posts: [],
+        verified: true,
       },
     ]);
+
+    await authorRepo.save(authors);
   }
 }
