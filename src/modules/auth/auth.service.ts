@@ -22,8 +22,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  private _createToken(id: number) {
-    return this.jwtService.sign({ id });
+  private _createToken(id: number, role: string) {
+    return this.jwtService.sign({ id, role });
   }
 
   async create(payload: CreateAuthorInput) {
@@ -124,7 +124,7 @@ export class AuthService {
         'wrong password',
         HttpStatus.UNAUTHORIZED.toString(),
       );
-    const token = this._createToken(author.id);
+    const token = this._createToken(author.id, author.role);
     return {
       expiresIn: process.env.EXPIRES_IN,
       id: author.id,
