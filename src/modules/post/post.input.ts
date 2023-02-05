@@ -25,7 +25,7 @@ export class CreatePostInput {
   @Field(() => [Int], { nullable: true })
   tags?: Tag[];
 
-  author: Author;
+  authorID: number;
 }
 
 @InputType()
@@ -63,7 +63,7 @@ export class DeletePostInput {
 
 @InputType()
 export class UpdatePostInput extends PartialType(
-  OmitType(CreatePostInput, ['author'] as const),
+  OmitType(CreatePostInput, ['authorID'] as const),
 ) {
   @Field(() => Int)
   id: number;

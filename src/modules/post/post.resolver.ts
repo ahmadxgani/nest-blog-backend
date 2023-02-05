@@ -1,7 +1,6 @@
 import { Args, Resolver, Query, Mutation } from '@nestjs/graphql';
 import { Slugify } from 'src/util/utilities';
-import { Author } from '../author/author.entity';
-import { Author as InjectAuthor } from 'src/decorator/author.decorator';
+import { AuthorId as InjectAuthor } from 'src/decorator/author.decorator';
 import {
   CreatePostInput,
   DeletePostInput,
@@ -32,22 +31,22 @@ export class PostResolver {
   @Query(() => LikePost, { nullable: true })
   async LikedPost(
     @Args('payload') payload: GetLikePost,
-    @InjectAuthor() author: Author,
+    @InjectAuthor() authorID: number,
   ) {
-    return await this.postService.getLikePost(payload.id, author.id);
+    return await this.postService.getLikePost(payload.id, authorID);
   }
 
   @Mutation(() => BookmarkPost)
   async BookmarkPost(
     @Args('payload') payload: IdPostInput,
-    @InjectAuthor() author: Author,
+    @InjectAuthor() authorID: number,
   ) {
-    return await this.postService.bookmarkPost(payload.idPost, author);
+    return await this.postService.bookmarkPost(payload.idPost, authorID);
   }
 
   @Query(() => [Post])
-  async getMyBookmark(@InjectAuthor() author: Author) {
-    return await this.postService.getAuthorBookmark(author.id);
+  async getMyBookmark(@InjectAuthor() authorID: number) {
+    return await this.postService.getAuthorBookmark(authorID);
   }
 
   @Query(() => BookmarkPost)
@@ -64,21 +63,21 @@ export class PostResolver {
   @Mutation(() => Post)
   async LikePost(
     @Args('payload') payload: IdPostInput,
-    @InjectAuthor() author: Author,
+    @InjectAuthor() authorID: number,
   ) {
-    return await this.postService.likePost(payload.idPost, author);
+    return await this.postService.likePost(payload.idPost, authorID);
   }
 
   @Mutation(() => Post)
   async CreatePost(
     @Args('payload')
     payload: CreatePostInput,
-    @InjectAuthor() author: Author,
+    @InjectAuthor() authorID: number,
   ) {
     return await this.postService.create({
       ...payload,
       slug: payload.slug ? payload.slug : (Slugify(payload.title) as string),
-      author: author,
+      authorID,
     });
   }
 

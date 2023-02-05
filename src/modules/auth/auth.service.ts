@@ -1,13 +1,12 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ApolloError } from 'apollo-server-core';
-import * as bcrypt from 'bcrypt';
 import {
   generateVerifyCode,
   hashPassword,
   sendToEmail,
 } from 'src/util/utilities';
-import { Author } from '../author/author.entity';
 import { CreateAuthorInput } from '../author/author.input';
 import { AuthorService } from '../author/author.service';
 import {
@@ -23,8 +22,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  private _createToken(email: string) {
-    return this.jwtService.sign({ email });
+  private _createToken(id: number) {
+    return this.jwtService.sign({ id });
   }
 
   async create(payload: CreateAuthorInput) {
@@ -36,7 +35,10 @@ export class AuthService {
 
     if (!author) throw new ApolloError('The User is not registered.', '404');
     if (author.verified)
-      throw new ApolloError('The account has already been activated.', '400');
+      throw new ApolloError(
+        'The account has already been activated.',
+        HttpStatus.BAD_REQUEST.toString(),
+      );
 
     author.verified = true;
     author.verifyCode = null;
@@ -49,7 +51,7 @@ export class AuthService {
     if (author.verified)
       throw new ApolloError(
         'Cannot unregister, Author has been verified',
-        '400',
+        HttpStatus.BAD_REQUEST.toString(),
       );
     this.authorService.delete({ id: author.id });
     return {
@@ -61,7 +63,10 @@ export class AuthService {
     const author = await this.authorService.read('email', email);
     if (!author) throw new ApolloError('User not found', '404');
     if (!!author.resetPasswordToken)
-      throw new ApolloError('email has been sent, check your inbox!', '400');
+      throw new ApolloError(
+        'email has been sent, check your inbox!',
+        HttpStatus.BAD_REQUEST.toString(),
+      );
     author.resetPasswordToken = generateVerifyCode();
 
     sendToEmail(author.email, author.resetPasswordToken);
@@ -70,11 +75,12 @@ export class AuthService {
 
   async resetPassword(payload: ResetPasswordInput) {
     const author = await this.authorService.readById(payload.authorID);
-    if (!author) throw new ApolloError('Invalid User', '400');
+    if (!author)
+      throw new ApolloError('Invalid User', HttpStatus.BAD_REQUEST.toString());
     if (!author.resetPasswordToken)
       throw new ApolloError('SUS Request detected');
     if (author.resetPasswordToken !== payload.token)
-      throw new ApolloError('Invalid token', '400');
+      throw new ApolloError('Invalid token', HttpStatus.BAD_REQUEST.toString());
 
     this.authorService.updatePassword({
       id: author.id,
@@ -83,17 +89,18 @@ export class AuthService {
     });
   }
 
-  validate(payload: string) {
-    return this.authorService.read('email', payload);
-  }
-
-  async updatePassword(author: Author, payload: UpdatePasswordInput) {
+  async updatePassword(payload: UpdatePasswordInput & { id: number }) {
+    const author = await this.authorService.readById(payload.id);
+    if (!author) throw new ApolloError('Invalid User');
     const match = await bcrypt.compare(
       payload.currentPassword,
       author.password,
     );
     if (!match)
-      throw new HttpException('wrong password', HttpStatus.UNAUTHORIZED);
+      throw new ApolloError(
+        'wrong password',
+        HttpStatus.UNAUTHORIZED.toString(),
+      );
 
     return this.authorService.updatePassword({
       id: author.id,
@@ -104,17 +111,20 @@ export class AuthService {
   async login(payload: LoginInput) {
     const author = await this.authorService.read('email', payload.email);
     if (!author)
-      throw new HttpException(
+      throw new ApolloError(
         'the author with that email was not found',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NOT_FOUND.toString(),
       );
     if (!author.verified)
       throw new ApolloError('Please verify your email.', '403');
 
     const match = await bcrypt.compare(payload.password, author.password);
     if (!match)
-      throw new HttpException('wrong password', HttpStatus.UNAUTHORIZED);
-    const token = this._createToken(author.email);
+      throw new ApolloError(
+        'wrong password',
+        HttpStatus.UNAUTHORIZED.toString(),
+      );
+    const token = this._createToken(author.id);
     return {
       expiresIn: process.env.EXPIRES_IN,
       id: author.id,

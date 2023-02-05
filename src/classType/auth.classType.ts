@@ -26,3 +26,9 @@ export class MessageType {
   @Field()
   message: string;
 }
+
+@ObjectType()
+export class VerifyType {
+  @Field()
+  authenticated: boolean;
+}

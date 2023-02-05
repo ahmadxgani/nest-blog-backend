@@ -153,6 +153,7 @@ type Query {
   getMyBookmark: [Post!]!
   isPostBookmarked(payload: IdPostInput!): BookmarkPost!
   login(payload: LoginInput!): LoginType!
+  verify: VerifyType!
 }
 
 input ResetPasswordInput {
@@ -202,6 +203,10 @@ scalar Upload
 
 input VerifyEmailInput {
   code: String!
+}
+
+type VerifyType {
+  authenticated: Boolean!
 }
 
 enum roles {

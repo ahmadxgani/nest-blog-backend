@@ -19,7 +19,8 @@ export class PostService {
     @InjectRepository(Post) private PostModel: Repository<Post>,
     @InjectRepository(Tag) private TagModel: Repository<Tag>,
     @InjectRepository(LikePost) private LikeModel: Repository<LikePost>,
-    @InjectRepository(BookmarkPost) private BookmarkModel: Repository<BookmarkPost>,
+    @InjectRepository(BookmarkPost)
+    private BookmarkModel: Repository<BookmarkPost>,
   ) {}
 
   async getLikePost(postId: number, authorId: number) {
@@ -52,7 +53,7 @@ export class PostService {
     ).map((bookmarkList) => bookmarkList.post);
   }
 
-  async bookmarkPost(postId: number, author: Author) {
+  async bookmarkPost(postId: number, authorID: number) {
     const post = await this.PostModel.findOne({ where: { id: postId } });
     if (!post) throw new ApolloError('Post not found!');
 
@@ -62,20 +63,24 @@ export class PostService {
           id: post.id,
         },
         author: {
-          id: author.id,
+          id: authorID,
         },
       },
     });
 
     if (!isPost) {
-      await this.BookmarkModel.save({ post, author, isBookmarked: false });
+      await this.BookmarkModel.save({
+        post,
+        author: { id: authorID },
+        isBookmarked: false,
+      });
     }
 
     const isAuthorBookmarkedPost = await this.BookmarkModel.findOne({
       where: {
         isBookmarked: false,
         author: {
-          id: author.id,
+          id: authorID,
         },
       },
       relations: {
@@ -87,7 +92,7 @@ export class PostService {
       const findBookmarkedPost = await this.BookmarkModel.findOne({
         where: {
           author: {
-            id: author.id,
+            id: authorID,
           },
         },
       });
@@ -103,7 +108,7 @@ export class PostService {
     }
   }
 
-  async likePost(postId: number, author: Author) {
+  async likePost(postId: number, authorID: number) {
     const post = await this.PostModel.findOne({ where: { id: postId } });
     if (!post) throw new ApolloError('Post not found!');
 
@@ -113,20 +118,24 @@ export class PostService {
           id: post.id,
         },
         author: {
-          id: author.id,
+          id: authorID,
         },
       },
     });
 
     if (!isPost) {
-      await this.LikeModel.save({ post, author, isLiked: false });
+      await this.LikeModel.save({
+        post,
+        author: { id: authorID },
+        isLiked: false,
+      });
     }
 
     const isAuthorLikedPost = await this.LikeModel.findOne({
       where: {
         isLiked: false,
         author: {
-          id: author.id,
+          id: authorID,
         },
       },
       relations: {
@@ -138,7 +147,7 @@ export class PostService {
       const findLikedPost = await this.LikeModel.findOne({
         where: {
           author: {
-            id: author.id,
+            id: authorID,
           },
         },
       });
@@ -175,7 +184,7 @@ export class PostService {
       content: payload.content,
       slug: payload.slug,
       likes: 0,
-      author: payload.author,
+      author: { id: payload.authorID },
       tags,
     });
   }

@@ -1,6 +1,10 @@
-import { Author as InjectAuthor } from 'src/decorator/author.decorator';
+import { AuthorId as InjectAuthor } from 'src/decorator/author.decorator';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { LoginType, MessageType } from 'src/classType/auth.classType';
+import {
+  LoginType,
+  MessageType,
+  VerifyType,
+} from 'src/classType/auth.classType';
 import { Public } from 'src/decorator/public.decorator';
 import { Author } from '../author/author.entity';
 import { CreateAuthorInput } from '../author/author.input';
@@ -27,6 +31,13 @@ export class AuthResolver {
   @Mutation(() => Author)
   async createAccount(@Args('payload') payload: CreateAuthorInput) {
     return await this.authService.create(payload);
+  }
+
+  @Query(() => VerifyType)
+  async verify() {
+    return {
+      authenticated: true,
+    };
   }
 
   @Mutation(() => MessageType)
@@ -68,10 +79,10 @@ export class AuthResolver {
 
   @Mutation(() => MessageType)
   async updatePassword(
-    @InjectAuthor() author: Author,
+    @InjectAuthor() authorID: number,
     @Args('payload') payload: UpdatePasswordInput,
   ) {
-    await this.authService.updatePassword(author, payload);
+    await this.authService.updatePassword({ ...payload, id: authorID });
 
     return {
       message: 'Password update was successful.',

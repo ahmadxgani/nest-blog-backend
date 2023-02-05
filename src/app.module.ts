@@ -41,9 +41,11 @@ import { TagModule } from './modules/tag/tag.module';
     ImageModule,
     TagModule,
   ],
-  providers: [{
-    provide: APP_GUARD,
-    useClass: PassportGuard,
-  }]
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: PassportGuard,
+    },
+  ],
 })
 export class AppModule {}
