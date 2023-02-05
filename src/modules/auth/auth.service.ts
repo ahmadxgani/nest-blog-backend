@@ -14,6 +14,7 @@ import {
   ResetPasswordInput,
   UpdatePasswordInput,
 } from './auth.input';
+import type { roles } from 'src/interface/role.interface';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +23,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  private _createToken(id: number, role: string) {
+  private _createToken(id: number, role: roles) {
     return this.jwtService.sign({ id, role });
   }
 
