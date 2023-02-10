@@ -1,4 +1,4 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   Entity,
@@ -8,9 +8,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { roles } from '../../interface/role.interface';
+import { BookmarkPost } from '../post/bookmark.entity';
 import { Post } from '../post/post.entity';
-
-registerEnumType(roles, { name: 'roles' });
 
 @ObjectType({ description: 'Author model' })
 @Entity()
@@ -23,24 +22,25 @@ export class Author {
   @Column({ unique: true })
   username: string;
 
-  @Field(() => roles)
-  @Column({ default: roles.member })
-  role: roles;
-
   @Field()
   @Column({ unique: true })
   email: string;
 
-  @Field()
-  @Column()
-  password: string;
-
   @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.author, {
-    eager: true,
     cascade: true,
   })
   posts: Post[];
+
+  @Field(() => [BookmarkPost])
+  @OneToMany(() => BookmarkPost, (post) => post.author, {
+    cascade: true,
+  })
+  bookmarks: BookmarkPost[];
+
+  @Field({ nullable: true })
+  @Column({ unique: true, nullable: true })
+  image?: string;
 
   @Field()
   @CreateDateColumn({
@@ -57,19 +57,18 @@ export class Author {
   })
   updatedAt: Date;
 
-  @Field({ nullable: true })
-  @Column({ unique: true, nullable: true })
-  image?: string;
+  @Column({ default: roles.member })
+  role: roles;
 
-  @Field()
   @Column({ default: false })
   verified: boolean;
 
-  @Field(() => String, { nullable: true })
   @Column({ nullable: true, type: 'varchar' })
   verifyCode?: string | null;
 
-  @Field(() => String, { nullable: true })
   @Column({ nullable: true, type: 'varchar' })
   resetPasswordToken?: string | null;
+
+  @Column()
+  password: string;
 }

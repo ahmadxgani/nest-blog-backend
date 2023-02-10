@@ -16,6 +16,9 @@ export class BookmarkPost {
   post: Post;
 
   @Field(() => Boolean)
-  @Column()
+  @Column({ default: true })
   isBookmarked: boolean;
+
+  @Field()
+  bookmarks: number;
 }

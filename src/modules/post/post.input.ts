@@ -22,8 +22,8 @@ export class CreatePostInput {
   @Field({ nullable: true })
   draft?: boolean;
 
-  @Field(() => [Int], { nullable: true })
-  tags?: Tag[];
+  @Field(() => [Int], { nullable: 'items' })
+  tags: Tag[];
 
   authorID: number;
 }
@@ -47,12 +47,6 @@ export class GetPostByIdInput {
 export class GetPostBySlugInput {
   @Field()
   slug: string;
-}
-
-@InputType()
-export class GetLikePost {
-  @Field(() => Int)
-  id: number;
 }
 
 @InputType()

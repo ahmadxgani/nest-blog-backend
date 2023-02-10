@@ -8,14 +8,10 @@ type Author {
   email: String!
   id: Float!
   image: String
-  password: String!
   posts: [Post!]!
-  resetPasswordToken: String
-  role: roles!
+  tags: [Tag!]!
   updatedAt: DateTime!
   username: String!
-  verified: Boolean!
-  verifyCode: String
 }
 
 """Like Post Model"""
@@ -33,7 +29,7 @@ input CreatePostInput {
   content: String!
   draft: Boolean
   slug: String
-  tags: [Int!]
+  tags: [Int]!
   title: String!
 }
 
@@ -66,10 +62,6 @@ input GetByTagInput {
   name: String!
 }
 
-input GetLikePost {
-  id: Int!
-}
-
 input GetPostBySlugInput {
   slug: String!
 }
@@ -78,16 +70,10 @@ input IdPostInput {
   idPost: Int!
 }
 
-"""Image class-type"""
-type Image {
-  delete: String!
-  status: Float!
-  url: String!
-}
-
 """Like Post Model"""
 type LikePost {
   isLiked: Boolean!
+  likes: Int!
 }
 
 input LoginInput {
@@ -97,10 +83,7 @@ input LoginInput {
 
 type LoginType {
   email: String!
-  expiresIn: String!
-  id: Int!
   image: String
-  token: String!
   username: String!
 }
 
@@ -109,32 +92,33 @@ type MessageType {
 }
 
 type Mutation {
-  BookmarkPost(payload: IdPostInput!): BookmarkPost!
-  CreatePost(payload: CreatePostInput!): Post!
-  CreateTag(payload: CreateTagInput!): Tag!
-  DeleteAuthor(payload: GetAuthorIdInput!): ResponseType!
-  DeletePost(payload: DeletePostInput!): ResponseType!
-  DeleteTag(payload: DeleteTagInput!): ResponseType!
-  LikePost(payload: IdPostInput!): Post!
-  UpdateAuthor(file: Upload, payload: UpdateAuthorInput!): Author!
-  UpdatePost(payload: UpdatePostInput!): Post!
-  UpdateTag(payload: UpdateTagInput!): Tag!
+  bookmarkPost(payload: IdPostInput!): BookmarkPost!
   createAccount(payload: CreateAuthorInput!): Author!
+  createPost(payload: CreatePostInput!): Post!
+  createTag(payload: CreateTagInput!): Tag!
+  deleteAuthor(payload: GetAuthorIdInput!): ResponseType!
+  deletePost(payload: DeletePostInput!): ResponseType!
+  deleteTag(payload: DeleteTagInput!): ResponseType!
+  likePost(payload: IdPostInput!): Post!
+  login(payload: LoginInput!): LoginType!
   resetPassword(payload: ResetPasswordInput!): MessageType!
   unregisterUser(payload: VerifyEmailInput!): MessageType!
+  updateAuthor(file: Upload, payload: UpdateAuthorInput!): Author!
   updatePassword(payload: UpdatePasswordInput!): MessageType!
-  uploadFile(file: Upload!): Image!
+  updatePost(payload: UpdatePostInput!): Post!
+  updateTag(payload: UpdateTagInput!): Tag!
   verifyEmail(payload: VerifyEmailInput!): MessageType!
 }
 
 """Post model"""
 type Post {
   author: Author!
-  bookmark: BookmarkPost!
+  bookmark: [BookmarkPost!]!
   content: String!
   createdAt: DateTime!
   id: Int!
-  likes: Int!
+  like: [LikePost!]!
+  likes: LikePost!
   slug: String!
   tags: [Tag!]!
   title: String!
@@ -142,18 +126,16 @@ type Post {
 }
 
 type Query {
-  GetAuthorById(payload: GetAuthorIdInput!): Author!
-  GetPost(payload: GetPostBySlugInput!): Post!
-  LikedPost(payload: GetLikePost!): LikePost
-  ShowAllAuthor: [Author!]!
-  ShowAllPost: [Post!]!
-  ShowAllTag: [Tag!]!
-  ShowByTag(payload: GetByTagInput!): Tag!
   forgotPassword(payload: ForgotPasswordInput!): MessageType!
+  getAuthorById(payload: GetAuthorIdInput!): Author!
   getMyBookmark: [Post!]!
+  getPost(payload: GetPostBySlugInput!): Post!
   isPostBookmarked(payload: IdPostInput!): BookmarkPost!
-  login(payload: LoginInput!): LoginType!
-  verify: VerifyType!
+  loggedInAuthor: Author!
+  showAllAuthor: [Author!]!
+  showAllPost: [Post!]!
+  showAllTag: [Tag!]!
+  showByTag(payload: GetByTagInput!): Tag!
 }
 
 input ResetPasswordInput {
@@ -203,13 +185,4 @@ scalar Upload
 
 input VerifyEmailInput {
   code: String!
-}
-
-type VerifyType {
-  authenticated: Boolean!
-}
-
-enum roles {
-  admin
-  member
 }

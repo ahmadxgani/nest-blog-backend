@@ -1,16 +1,7 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class LoginType {
-  @Field()
-  expiresIn: string;
-
-  @Field(() => Int)
-  id: number;
-
-  @Field()
-  token: string;
-
   @Field()
   username: string;
 
@@ -25,10 +16,4 @@ export class LoginType {
 export class MessageType {
   @Field()
   message: string;
-}
-
-@ObjectType()
-export class VerifyType {
-  @Field()
-  authenticated: boolean;
 }

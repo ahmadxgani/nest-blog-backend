@@ -13,6 +13,7 @@ import {
 import { Author } from '../author/author.entity';
 import { Tag } from '../tag/tag.entity';
 import { BookmarkPost } from './bookmark.entity';
+import { LikePost } from './like.entity';
 
 @ObjectType({ description: 'Post model' })
 @Entity()
@@ -38,17 +39,17 @@ export class Post {
   @Column({ default: true })
   draft: boolean;
 
-  @Field(() => BookmarkPost)
+  @Field(() => [BookmarkPost])
   @OneToMany(() => BookmarkPost, (bookmark) => bookmark.post)
-  bookmark: BookmarkPost;
+  bookmark: BookmarkPost[];
 
   @Field()
   @Column({ unique: true })
   slug: string;
 
-  @Field(() => Int)
-  @Column()
-  likes: number;
+  @Field(() => [LikePost])
+  @OneToMany(() => LikePost, (likePosts) => likePosts.post)
+  like: LikePost[];
 
   @Field(() => [Tag])
   @ManyToMany(() => Tag, (tag) => tag.posts, {

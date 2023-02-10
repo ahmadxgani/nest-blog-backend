@@ -14,7 +14,7 @@ export class Tag {
   name: string;
 
   @Field(() => [Post])
-  @ManyToMany((_type) => Post, (post) => post.tags, {
+  @ManyToMany(() => Post, (post) => post.tags, {
     onDelete: 'CASCADE',
   })
   posts: Post[];

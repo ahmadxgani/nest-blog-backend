@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -10,7 +9,6 @@ import { AuthorModule } from './modules/author/author.module';
 import { PostModule } from './modules/post/post.module';
 import { PassportGuard } from 'src/guard/passport.guard';
 import { AuthModule } from './modules/auth/auth.module';
-import { ImageModule } from './modules/image/image.module';
 import { TagModule } from './modules/tag/tag.module';
 
 @Module({
@@ -22,11 +20,15 @@ import { TagModule } from './modules/tag/tag.module';
       sortSchema: true,
       debug: false,
       playground: true,
+      cors: {
+        origin: 'http://localhost:3000',
+        credentials: true,
+      },
     }),
     TypeOrmModule.forRoot({
-      type: process.env.DB_DIALECT,
+      type: process.env.DB_DIALECT as 'postgres',
       host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
+      port: Number(process.env.DB_PORT),
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
@@ -38,7 +40,6 @@ import { TagModule } from './modules/tag/tag.module';
     PostModule,
     AuthorModule,
     AuthModule,
-    ImageModule,
     TagModule,
   ],
   providers: [

@@ -17,40 +17,43 @@ import {
 export class PostService {
   constructor(
     @InjectRepository(Post) private PostModel: Repository<Post>,
+    @InjectRepository(Author) private AuthorModel: Repository<Author>,
     @InjectRepository(Tag) private TagModel: Repository<Tag>,
     @InjectRepository(LikePost) private LikeModel: Repository<LikePost>,
     @InjectRepository(BookmarkPost)
     private BookmarkModel: Repository<BookmarkPost>,
   ) {}
 
-  async getLikePost(postId: number, authorId: number) {
-    return await this.LikeModel.findOne({
-      where: {
-        post: {
-          id: postId,
-        },
-        author: {
-          id: authorId,
-        },
-      },
-    });
+  async getPosts(id: number) {
+    return await this.PostModel.findBy({ bookmark: { id } });
   }
 
-  async getAuthorBookmark(authorId: number) {
-    return (
-      await this.BookmarkModel.find({
-        where: {
-          author: {
-            id: authorId,
-          },
-        },
-        relations: {
-          post: {
-            author: true,
-          },
-        },
-      })
-    ).map((bookmarkList) => bookmarkList.post);
+  async getAuthor(id: number) {
+    return await this.AuthorModel.findOneBy({ posts: { id } });
+  }
+
+  async getBookmarkedPost(authorID: number) {
+    return await this.BookmarkModel.findBy({ author: { id: authorID } });
+  }
+
+  async getTag(id: number) {
+    return await this.TagModel.findBy({ posts: { id } });
+  }
+
+  async getLikePost(postID: number) {
+    const result = await this.LikeModel.findBy({
+      post: { id: postID },
+      isLiked: true,
+    });
+    return result.map((likePost) => ({ ...likePost, likes: result.length }));
+  }
+
+  async getPostByTag(name: string) {
+    return await this.PostModel.findBy({ tags: { name } });
+  }
+
+  async getPostByAuthor(username: string) {
+    return await this.PostModel.findBy({ author: { username } });
   }
 
   async bookmarkPost(postId: number, authorID: number) {
@@ -68,110 +71,49 @@ export class PostService {
       },
     });
 
-    if (!isPost) {
+    if (isPost) {
+      await this.BookmarkModel.save({
+        isBookmarked: false,
+      });
+    } else {
       await this.BookmarkModel.save({
         post,
         author: { id: authorID },
-        isBookmarked: false,
       });
-    }
-
-    const isAuthorBookmarkedPost = await this.BookmarkModel.findOne({
-      where: {
-        isBookmarked: false,
-        author: {
-          id: authorID,
-        },
-      },
-      relations: {
-        post: true,
-      },
-    });
-
-    if (!isAuthorBookmarkedPost) {
-      const findBookmarkedPost = await this.BookmarkModel.findOne({
-        where: {
-          author: {
-            id: authorID,
-          },
-        },
-      });
-      if (findBookmarkedPost) {
-        return this.BookmarkModel.save({
-          ...findBookmarkedPost,
-          isBookmarked: false,
-        });
-      }
-    } else {
-      isAuthorBookmarkedPost.isBookmarked = true;
-      return this.BookmarkModel.save(isAuthorBookmarkedPost);
     }
   }
 
   async likePost(postId: number, authorID: number) {
-    const post = await this.PostModel.findOne({ where: { id: postId } });
+    const post = await this.PostModel.findOneBy({ id: postId });
     if (!post) throw new ApolloError('Post not found!');
 
-    const isPost = await this.LikeModel.findOne({
-      where: {
-        post: {
-          id: post.id,
-        },
-        author: {
-          id: authorID,
-        },
+    const isPostLiked = await this.LikeModel.findOneBy({
+      post: {
+        id: post.id,
+      },
+      author: {
+        id: authorID,
       },
     });
 
-    if (!isPost) {
-      await this.LikeModel.save({
+    if (isPostLiked) {
+      if (!isPostLiked.isLiked) {
+        this.LikeModel.save({
+          isLiked: false,
+          likes: isPostLiked.likes - 1,
+        });
+        return this.PostModel.save(post);
+      }
+    } else {
+      return await this.LikeModel.save({
         post,
         author: { id: authorID },
-        isLiked: false,
       });
-    }
-
-    const isAuthorLikedPost = await this.LikeModel.findOne({
-      where: {
-        isLiked: false,
-        author: {
-          id: authorID,
-        },
-      },
-      relations: {
-        post: true,
-      },
-    });
-
-    if (!isAuthorLikedPost) {
-      const findLikedPost = await this.LikeModel.findOne({
-        where: {
-          author: {
-            id: authorID,
-          },
-        },
-      });
-      if (findLikedPost) {
-        this.LikeModel.save({ ...findLikedPost, isLiked: false });
-        post!.likes = post!.likes - 1;
-      }
-      return this.PostModel.save(post);
-    } else {
-      isAuthorLikedPost.isLiked = true;
-      this.LikeModel.save(isAuthorLikedPost);
-
-      post!.likes = post!.likes + 1;
-      return this.PostModel.save(post);
     }
   }
 
   async getAll() {
-    return await this.PostModel.find({
-      relations: {
-        tags: true,
-        author: true,
-      },
-    });
+    return await this.PostModel.find();
   }
 
   async create(payload: CreatePostInput) {
@@ -183,7 +125,6 @@ export class PostService {
       title: payload.title,
       content: payload.content,
       slug: payload.slug,
-      likes: 0,
       author: { id: payload.authorID },
       tags,
     });
@@ -200,25 +141,11 @@ export class PostService {
   }
 
   async read<T>(key: string, value: T) {
-    return await this.PostModel.findOne({
-      where: {
-        [key]: value,
-      },
-      relations: {
-        tags: true,
-        author: true,
-      },
-    });
+    return await this.PostModel.findOneBy({ [key]: value });
   }
 
   async readById(id: number) {
-    return await this.PostModel.findOne({
-      relations: {
-        tags: true,
-        author: true,
-      },
-      where: { id },
-    });
+    return await this.PostModel.findOneBy({ id });
   }
 
   async update(payload: UpdatePostInput) {

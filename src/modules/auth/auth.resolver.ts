@@ -1,10 +1,6 @@
 import { AuthorId as InjectAuthor } from 'src/decorator/author.decorator';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import {
-  LoginType,
-  MessageType,
-  VerifyType,
-} from 'src/classType/auth.classType';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { LoginType, MessageType } from 'src/classType/auth.classType';
 import { Public } from 'src/decorator/public.decorator';
 import { Author } from '../author/author.entity';
 import { CreateAuthorInput } from '../author/author.input';
@@ -16,28 +12,33 @@ import {
   VerifyEmailInput,
 } from './auth.input';
 import { AuthService } from './auth.service';
+import { Request } from 'express';
+import ms from 'ms';
 
 @Resolver()
 export class AuthResolver {
   constructor(private authService: AuthService) {}
 
   @Public()
-  @Query(() => LoginType)
-  async login(@Args('payload') payload: LoginInput) {
-    return await this.authService.login(payload);
+  @Mutation(() => LoginType)
+  async login(
+    @Args('payload') payload: LoginInput,
+    @Context('req') req: Request,
+  ) {
+    const data = await this.authService.login(payload);
+    req.res?.cookie('token', data.token, {
+      expires: new Date(
+        Date.now() + (ms(process.env.EXPIRES_IN as string) as number),
+      ),
+    });
+    delete data.token;
+    return data;
   }
 
   @Public()
   @Mutation(() => Author)
   async createAccount(@Args('payload') payload: CreateAuthorInput) {
     return await this.authService.create(payload);
-  }
-
-  @Query(() => VerifyType)
-  async verify() {
-    return {
-      authenticated: true,
-    };
   }
 
   @Mutation(() => MessageType)

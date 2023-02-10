@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, ManyToOne, PrimaryGeneratedColumn, Entity } from 'typeorm';
 import { Author } from '../author/author.entity';
 import { Post } from './post.entity';
@@ -15,7 +15,10 @@ export class LikePost {
   @ManyToOne(() => Post, { onDelete: 'CASCADE' })
   post: Post;
 
+  @Field(() => Int)
+  likes: number;
+
   @Field(() => Boolean)
-  @Column()
+  @Column({ default: true })
   isLiked: boolean;
 }

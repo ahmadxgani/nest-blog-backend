@@ -23,8 +23,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  private _createToken(id: number, role: roles) {
-    return this.jwtService.sign({ id, role });
+  private _createToken(id: number, role: roles): string | undefined {
+    return this.jwtService.sign(
+      { id, role },
+      { expiresIn: process.env.EXPIRES_IN },
+    );
   }
 
   async create(payload: CreateAuthorInput) {
@@ -127,8 +130,6 @@ export class AuthService {
       );
     const token = this._createToken(author.id, author.role);
     return {
-      expiresIn: process.env.EXPIRES_IN,
-      id: author.id,
       token,
       username: author.username,
       email: author.email,

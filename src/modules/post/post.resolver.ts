@@ -1,10 +1,17 @@
-import { Args, Resolver, Query, Mutation } from '@nestjs/graphql';
+import {
+  Args,
+  Resolver,
+  Query,
+  Mutation,
+  ResolveField,
+  Parent,
+  Root,
+} from '@nestjs/graphql';
 import { Slugify } from 'src/util/utilities';
 import { AuthorId as InjectAuthor } from 'src/decorator/author.decorator';
 import {
   CreatePostInput,
   DeletePostInput,
-  GetLikePost,
   GetPostBySlugInput,
   IdPostInput,
   UpdatePostInput,
@@ -17,6 +24,8 @@ import { UseGuards } from '@nestjs/common';
 import { IsOwnedPost } from 'src/guard/isOwnedPost.guard';
 import { LikePost } from './like.entity';
 import { BookmarkPost } from './bookmark.entity';
+import { Author } from '../author/author.entity';
+import { Tag } from '../tag/tag.entity';
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -24,29 +33,16 @@ export class PostResolver {
 
   @Query(() => [Post])
   @Public()
-  async ShowAllPost() {
+  async showAllPost() {
     return await this.postService.getAll();
   }
 
-  @Query(() => LikePost, { nullable: true })
-  async LikedPost(
-    @Args('payload') payload: GetLikePost,
-    @InjectAuthor() authorID: number,
-  ) {
-    return await this.postService.getLikePost(payload.id, authorID);
-  }
-
   @Mutation(() => BookmarkPost)
-  async BookmarkPost(
+  async bookmarkPost(
     @Args('payload') payload: IdPostInput,
     @InjectAuthor() authorID: number,
   ) {
     return await this.postService.bookmarkPost(payload.idPost, authorID);
-  }
-
-  @Query(() => [Post])
-  async getMyBookmark(@InjectAuthor() authorID: number) {
-    return await this.postService.getAuthorBookmark(authorID);
   }
 
   @Query(() => BookmarkPost)
@@ -56,12 +52,12 @@ export class PostResolver {
 
   @Query(() => Post)
   @Public()
-  async GetPost(@Args('payload') payload: GetPostBySlugInput) {
+  async getPost(@Args('payload') payload: GetPostBySlugInput) {
     return await this.postService.read('slug', payload.slug);
   }
 
   @Mutation(() => Post)
-  async LikePost(
+  async likePost(
     @Args('payload') payload: IdPostInput,
     @InjectAuthor() authorID: number,
   ) {
@@ -69,7 +65,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Post)
-  async CreatePost(
+  async createPost(
     @Args('payload')
     payload: CreatePostInput,
     @InjectAuthor() authorID: number,
@@ -83,7 +79,7 @@ export class PostResolver {
 
   @Mutation(() => Post)
   @UseGuards(IsOwnedPost)
-  async UpdatePost(
+  async updatePost(
     @Args('payload')
     payload: UpdatePostInput,
   ) {
@@ -95,10 +91,30 @@ export class PostResolver {
 
   @Mutation(() => ResponseType)
   @UseGuards(IsOwnedPost)
-  async DeletePost(@Args('payload') payload: DeletePostInput) {
+  async deletePost(@Args('payload') payload: DeletePostInput) {
     await this.postService.delete(payload);
     return {
       success: true,
     };
+  }
+
+  @ResolveField(() => Author)
+  async author(@Parent() post: Post) {
+    return this.postService.getAuthor(post.id);
+  }
+
+  @ResolveField(() => [Post])
+  async posts(@Parent() bookmark: BookmarkPost) {
+    return this.postService.getPosts(bookmark.id);
+  }
+
+  @ResolveField(() => [Tag])
+  async tags(@Parent() post: Post) {
+    return this.postService.getTag(post.id);
+  }
+
+  @ResolveField(() => [LikePost])
+  async likes(@Root() post: Post) {
+    return await this.postService.getLikePost(post.id);
   }
 }

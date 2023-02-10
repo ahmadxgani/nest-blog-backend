@@ -1,4 +1,11 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Query,
+  ResolveField,
+  Resolver,
+  Root,
+} from '@nestjs/graphql';
 import { TagService } from './tag.service';
 import { roles } from 'src/interface/role.interface';
 import { Auth } from 'src/decorator/auth.decorator';
@@ -10,25 +17,34 @@ import {
   UpdateTagInput,
 } from './tag.input';
 import { ResponseType } from 'src/classType/delete.classType';
+import { Post } from '../post/post.entity';
+import { PostService } from '../post/post.service';
 
-@Resolver()
+@Resolver(() => Tag)
 export class TagResolver {
-  constructor(private tagService: TagService) {}
-  @Query(() => [Tag])
-  async ShowAllTag() {
-    console.log(await this.tagService.getAllTag());
+  constructor(
+    private tagService: TagService,
+    private postService: PostService,
+  ) {}
 
+  @ResolveField(() => [Post])
+  async posts(@Root() tag: Tag) {
+    return this.postService.getPostByTag(tag.name);
+  }
+
+  @Query(() => [Tag])
+  async showAllTag() {
     return await this.tagService.getAllTag();
   }
 
   @Query(() => Tag)
-  async ShowByTag(@Args('payload') { name }: GetByTagInput) {
+  async showByTag(@Args('payload') { name }: GetByTagInput) {
     return await this.tagService.readTag(name);
   }
 
   @Mutation(() => Tag)
   @Auth(roles.admin)
-  async CreateTag(
+  async createTag(
     @Args('payload')
     payload: CreateTagInput,
   ) {
@@ -37,7 +53,7 @@ export class TagResolver {
 
   @Mutation(() => Tag)
   @Auth(roles.admin)
-  async UpdateTag(
+  async updateTag(
     @Args('payload')
     payload: UpdateTagInput,
   ) {
@@ -46,7 +62,7 @@ export class TagResolver {
 
   @Mutation(() => ResponseType)
   @Auth(roles.admin)
-  async DeleteTag(@Args('payload') payload: DeleteTagInput) {
+  async deleteTag(@Args('payload') payload: DeleteTagInput) {
     await this.tagService.deleteTag(payload);
     return {
       success: true,
