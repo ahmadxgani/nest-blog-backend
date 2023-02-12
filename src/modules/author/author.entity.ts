@@ -7,8 +7,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
 import { roles } from '../../interface/role.interface';
-import { BookmarkPost } from '../post/bookmark.entity';
+import { Bookmark } from '../bookmark/entities/bookmark.entity';
 import { Post } from '../post/post.entity';
 
 @ObjectType({ description: 'Author model' })
@@ -25,18 +26,6 @@ export class Author {
   @Field()
   @Column({ unique: true })
   email: string;
-
-  @Field(() => [Post])
-  @OneToMany(() => Post, (post) => post.author, {
-    cascade: true,
-  })
-  posts: Post[];
-
-  @Field(() => [BookmarkPost])
-  @OneToMany(() => BookmarkPost, (post) => post.author, {
-    cascade: true,
-  })
-  bookmarks: BookmarkPost[];
 
   @Field({ nullable: true })
   @Column({ unique: true, nullable: true })
@@ -56,6 +45,16 @@ export class Author {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updatedAt: Date;
+
+  @OneToMany(() => Post, (post) => post.author, {
+    cascade: true,
+  })
+  posts: Post[];
+
+  @OneToMany(() => Bookmark, (post) => post.author, {
+    cascade: true,
+  })
+  bookmarks: Bookmark[];
 
   @Column({ default: roles.member })
   role: roles;

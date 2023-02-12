@@ -37,13 +37,13 @@ export class AuthResolver {
 
   @Public()
   @Mutation(() => Author)
-  async createAccount(@Args('payload') payload: CreateAuthorInput) {
-    return await this.authService.create(payload);
+  createAccount(@Args('payload') payload: CreateAuthorInput) {
+    return this.authService.create(payload);
   }
 
   @Mutation(() => MessageType)
   @Public()
-  async verifyEmail(@Args('payload') payload: VerifyEmailInput) {
+  verifyEmail(@Args('payload') payload: VerifyEmailInput) {
     this.authService.verifyEmail(payload.code);
     return {
       message: 'success',
@@ -52,8 +52,8 @@ export class AuthResolver {
 
   @Public()
   @Query(() => MessageType)
-  async forgotPassword(@Args('payload') payload: ForgotPasswordInput) {
-    await this.authService.forgotPassword(payload.email);
+  forgotPassword(@Args('payload') payload: ForgotPasswordInput) {
+    this.authService.forgotPassword(payload.email);
     return {
       message:
         'check your email, verification link has been successfuly sent to your email!',
@@ -62,7 +62,7 @@ export class AuthResolver {
 
   @Public()
   @Mutation(() => MessageType)
-  async unregisterUser(@Args('payload') payload: VerifyEmailInput) {
+  unregisterUser(@Args('payload') payload: VerifyEmailInput) {
     this.authService.unregisterUser(payload.code);
     return {
       message: 'The account delete was successful',
@@ -71,19 +71,19 @@ export class AuthResolver {
 
   @Public()
   @Mutation(() => MessageType)
-  async resetPassword(@Args('payload') payload: ResetPasswordInput) {
-    await this.authService.resetPassword(payload);
+  resetPassword(@Args('payload') payload: ResetPasswordInput) {
+    this.authService.resetPassword(payload);
     return {
       message: 'Password has been successfully changed, Please login',
     };
   }
 
   @Mutation(() => MessageType)
-  async updatePassword(
+  updatePassword(
     @InjectAuthor() authorID: number,
     @Args('payload') payload: UpdatePasswordInput,
   ) {
-    await this.authService.updatePassword({ ...payload, id: authorID });
+    this.authService.updatePassword({ ...payload, id: authorID });
 
     return {
       message: 'Password update was successful.',

@@ -1,12 +1,10 @@
-import { Field, InputType, Int, OmitType, PartialType } from '@nestjs/graphql';
-import { Author } from '../author/author.entity';
-import { Tag } from '../tag/tag.entity';
-
-@InputType()
-export class IdPostInput {
-  @Field(() => Int)
-  idPost: number;
-}
+import {
+  Field,
+  InputType,
+  OmitType,
+  PartialType,
+  IntersectionType,
+} from '@nestjs/graphql';
 
 @InputType()
 export class CreatePostInput {
@@ -17,13 +15,13 @@ export class CreatePostInput {
   content: string;
 
   @Field({ nullable: true })
-  slug: string;
+  slug?: string;
 
   @Field({ nullable: true })
   draft?: boolean;
 
-  @Field(() => [Int], { nullable: 'items' })
-  tags: Tag[];
+  @Field(() => [String], { nullable: true })
+  tags?: string[];
 
   authorID: number;
 }
@@ -50,15 +48,7 @@ export class GetPostBySlugInput {
 }
 
 @InputType()
-export class DeletePostInput {
-  @Field(() => Int)
-  id: number;
-}
-
-@InputType()
-export class UpdatePostInput extends PartialType(
-  OmitType(CreatePostInput, ['authorID'] as const),
-) {
-  @Field(() => Int)
-  id: number;
-}
+export class UpdatePostInput extends IntersectionType(
+  PartialType(OmitType(CreatePostInput, ['authorID'] as const)),
+  GetPostByIdInput,
+) {}

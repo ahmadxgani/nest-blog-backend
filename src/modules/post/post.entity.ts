@@ -12,8 +12,8 @@ import {
 } from 'typeorm';
 import { Author } from '../author/author.entity';
 import { Tag } from '../tag/tag.entity';
-import { BookmarkPost } from './bookmark.entity';
-import { LikePost } from './like.entity';
+import { Bookmark } from '../bookmark/entities/bookmark.entity';
+import { Like } from '../like/entities/like.entity';
 
 @ObjectType({ description: 'Post model' })
 @Entity()
@@ -30,33 +30,29 @@ export class Post {
   @Column()
   content: string;
 
-  @Field(() => Author)
-  @ManyToOne(() => Author, (author) => author.posts, {
-    onDelete: 'CASCADE',
-  })
-  author: Author;
-
   @Column({ default: true })
   draft: boolean;
-
-  @Field(() => [BookmarkPost])
-  @OneToMany(() => BookmarkPost, (bookmark) => bookmark.post)
-  bookmark: BookmarkPost[];
 
   @Field()
   @Column({ unique: true })
   slug: string;
 
-  @Field(() => [LikePost])
-  @OneToMany(() => LikePost, (likePosts) => likePosts.post)
-  like: LikePost[];
+  @OneToMany(() => Like, (likePosts) => likePosts.post)
+  like: Like[];
 
-  @Field(() => [Tag])
+  @OneToMany(() => Bookmark, (bookmark) => bookmark.post)
+  bookmark: Bookmark[];
+
   @ManyToMany(() => Tag, (tag) => tag.posts, {
     cascade: true,
   })
   @JoinTable()
   tags: Tag[];
+
+  @ManyToOne(() => Author, (author) => author.posts, {
+    onDelete: 'CASCADE',
+  })
+  author: Author;
 
   @Field()
   @CreateDateColumn({

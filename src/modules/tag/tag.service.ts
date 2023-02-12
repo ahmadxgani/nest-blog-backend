@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ApolloError } from 'apollo-server-core';
+import { Repository, In } from 'typeorm';
+
 import { Tag } from './tag.entity';
 import { CreateTagInput, DeleteTagInput, UpdateTagInput } from './tag.input';
 
@@ -8,12 +10,16 @@ import { CreateTagInput, DeleteTagInput, UpdateTagInput } from './tag.input';
 export class TagService {
   constructor(@InjectRepository(Tag) private TagModel: Repository<Tag>) {}
 
+  async getAllTag() {
+    return await this.TagModel.find();
+  }
+
   async getTagByPost(id: number) {
     return await this.TagModel.findBy({ posts: { id } });
   }
 
-  async getAllTag() {
-    return await this.TagModel.find();
+  async getExistedTag(tags: string[]) {
+    return await this.TagModel.findBy({ name: In(tags) });
   }
 
   async createTag(payload: CreateTagInput) {
@@ -37,6 +43,14 @@ export class TagService {
   }
 
   async deleteTag(payload: DeleteTagInput) {
-    return await this.TagModel.delete({ id: payload.id });
+    try {
+      return await this.TagModel.delete({ id: payload.id });
+    } catch (error) {
+      console.log(error);
+      throw new ApolloError(
+        'Tag not exists',
+        HttpStatus.BAD_REQUEST.toString(),
+      );
+    }
   }
 }

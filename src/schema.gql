@@ -4,19 +4,20 @@
 
 """Author model"""
 type Author {
+  bookmarks: [Bookmark!]!
   createdAt: DateTime!
   email: String!
   id: Float!
   image: String
   posts: [Post!]!
-  tags: [Tag!]!
   updatedAt: DateTime!
   username: String!
 }
 
 """Like Post Model"""
-type BookmarkPost {
-  isBookmarked: Boolean!
+type Bookmark {
+  bookmarkedPosts: [Post!]!
+  bookmarks: Float!
 }
 
 input CreateAuthorInput {
@@ -29,7 +30,7 @@ input CreatePostInput {
   content: String!
   draft: Boolean
   slug: String
-  tags: [Int]!
+  tags: [String!]
   title: String!
 }
 
@@ -41,10 +42,6 @@ input CreateTagInput {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
-
-input DeletePostInput {
-  id: Int!
-}
 
 input DeleteTagInput {
   id: Int!
@@ -62,17 +59,16 @@ input GetByTagInput {
   name: String!
 }
 
+input GetPostByIdInput {
+  id: Float!
+}
+
 input GetPostBySlugInput {
   slug: String!
 }
 
-input IdPostInput {
-  idPost: Int!
-}
-
 """Like Post Model"""
-type LikePost {
-  isLiked: Boolean!
+type Like {
   likes: Int!
 }
 
@@ -92,14 +88,14 @@ type MessageType {
 }
 
 type Mutation {
-  bookmarkPost(payload: IdPostInput!): BookmarkPost!
+  bookmarkPost(payload: GetPostByIdInput!): Bookmark!
   createAccount(payload: CreateAuthorInput!): Author!
   createPost(payload: CreatePostInput!): Post!
   createTag(payload: CreateTagInput!): Tag!
   deleteAuthor(payload: GetAuthorIdInput!): ResponseType!
-  deletePost(payload: DeletePostInput!): ResponseType!
+  deletePost(payload: GetPostByIdInput!): ResponseType!
   deleteTag(payload: DeleteTagInput!): ResponseType!
-  likePost(payload: IdPostInput!): Post!
+  likePost(payload: GetPostByIdInput!): Like!
   login(payload: LoginInput!): LoginType!
   resetPassword(payload: ResetPasswordInput!): MessageType!
   unregisterUser(payload: VerifyEmailInput!): MessageType!
@@ -113,12 +109,10 @@ type Mutation {
 """Post model"""
 type Post {
   author: Author!
-  bookmark: [BookmarkPost!]!
   content: String!
   createdAt: DateTime!
   id: Int!
-  like: [LikePost!]!
-  likes: LikePost!
+  like: Like!
   slug: String!
   tags: [Tag!]!
   title: String!
@@ -128,9 +122,7 @@ type Post {
 type Query {
   forgotPassword(payload: ForgotPasswordInput!): MessageType!
   getAuthorById(payload: GetAuthorIdInput!): Author!
-  getMyBookmark: [Post!]!
   getPost(payload: GetPostBySlugInput!): Post!
-  isPostBookmarked(payload: IdPostInput!): BookmarkPost!
   loggedInAuthor: Author!
   showAllAuthor: [Author!]!
   showAllPost: [Post!]!
@@ -169,9 +161,9 @@ input UpdatePasswordInput {
 input UpdatePostInput {
   content: String
   draft: Boolean
-  id: Int!
+  id: Float!
   slug: String
-  tags: [Int!]
+  tags: [String!]
   title: String
 }
 

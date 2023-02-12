@@ -98,7 +98,15 @@ export class AuthorService {
     return this.AuthorModel.update(payload.id, { ...payload, password });
   }
 
-  delete({ id }: GetAuthorIdInput) {
-    return this.AuthorModel.delete(id);
+  async delete({ id }: GetAuthorIdInput) {
+    try {
+      return await this.AuthorModel.delete(id);
+    } catch (error) {
+      throw new ApolloError('Failed to delete author: ', error);
+    }
+  }
+
+  async getAuthor(id: number) {
+    return await this.AuthorModel.findOneBy({ posts: { id } });
   }
 }

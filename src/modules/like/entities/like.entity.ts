@@ -1,11 +1,11 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, ManyToOne, PrimaryGeneratedColumn, Entity } from 'typeorm';
-import { Author } from '../author/author.entity';
-import { Post } from './post.entity';
+import { ManyToOne, PrimaryGeneratedColumn, Entity } from 'typeorm';
+import { Author } from '../../author/author.entity';
+import { Post } from '../../post/post.entity';
 
 @ObjectType({ description: 'Like Post Model' })
 @Entity()
-export class LikePost {
+export class Like {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -17,8 +17,4 @@ export class LikePost {
 
   @Field(() => Int)
   likes: number;
-
-  @Field(() => Boolean)
-  @Column({ default: true })
-  isLiked: boolean;
 }

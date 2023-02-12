@@ -1,15 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApolloError } from 'apollo-server-core';
-import { Tag } from 'src/modules/tag/tag.entity';
+import { Slugify } from 'src/util/utilities';
 import { Repository, In } from 'typeorm';
-import { Author } from '../author/author.entity';
-import { BookmarkPost } from './bookmark.entity';
-import { LikePost } from './like.entity';
+import { TagService } from '../tag/tag.service';
 import { Post } from './post.entity';
 import {
   CreatePostInput,
-  DeletePostInput,
+  GetPostByIdInput,
   UpdatePostInput,
 } from './post.input';
 
@@ -17,35 +15,11 @@ import {
 export class PostService {
   constructor(
     @InjectRepository(Post) private PostModel: Repository<Post>,
-    @InjectRepository(Author) private AuthorModel: Repository<Author>,
-    @InjectRepository(Tag) private TagModel: Repository<Tag>,
-    @InjectRepository(LikePost) private LikeModel: Repository<LikePost>,
-    @InjectRepository(BookmarkPost)
-    private BookmarkModel: Repository<BookmarkPost>,
+    @Inject(TagService) private readonly tagService: TagService,
   ) {}
 
   async getPosts(id: number) {
     return await this.PostModel.findBy({ bookmark: { id } });
-  }
-
-  async getAuthor(id: number) {
-    return await this.AuthorModel.findOneBy({ posts: { id } });
-  }
-
-  async getBookmarkedPost(authorID: number) {
-    return await this.BookmarkModel.findBy({ author: { id: authorID } });
-  }
-
-  async getTag(id: number) {
-    return await this.TagModel.findBy({ posts: { id } });
-  }
-
-  async getLikePost(postID: number) {
-    const result = await this.LikeModel.findBy({
-      post: { id: postID },
-      isLiked: true,
-    });
-    return result.map((likePost) => ({ ...likePost, likes: result.length }));
   }
 
   async getPostByTag(name: string) {
@@ -56,70 +30,14 @@ export class PostService {
     return await this.PostModel.findBy({ author: { username } });
   }
 
-  async bookmarkPost(postId: number, authorID: number) {
-    const post = await this.PostModel.findOne({ where: { id: postId } });
-    if (!post) throw new ApolloError('Post not found!');
-
-    const isPost = await this.BookmarkModel.findOne({
-      where: {
-        post: {
-          id: post.id,
-        },
-        author: {
-          id: authorID,
-        },
-      },
-    });
-
-    if (isPost) {
-      await this.BookmarkModel.save({
-        isBookmarked: false,
-      });
-    } else {
-      await this.BookmarkModel.save({
-        post,
-        author: { id: authorID },
-      });
-    }
-  }
-
-  async likePost(postId: number, authorID: number) {
-    const post = await this.PostModel.findOneBy({ id: postId });
-    if (!post) throw new ApolloError('Post not found!');
-
-    const isPostLiked = await this.LikeModel.findOneBy({
-      post: {
-        id: post.id,
-      },
-      author: {
-        id: authorID,
-      },
-    });
-
-    if (isPostLiked) {
-      if (!isPostLiked.isLiked) {
-        this.LikeModel.save({
-          isLiked: false,
-          likes: isPostLiked.likes - 1,
-        });
-        return this.PostModel.save(post);
-      }
-    } else {
-      return await this.LikeModel.save({
-        post,
-        author: { id: authorID },
-      });
-    }
-  }
-
   async getAll() {
     return await this.PostModel.find();
   }
 
   async create(payload: CreatePostInput) {
-    const tags = await this.TagModel.find({
-      where: { id: In(payload.tags || []) },
-    });
+    const tags = payload.tags
+      ? await this.tagService.getExistedTag(payload.tags)
+      : undefined;
 
     return await this.PostModel.save({
       title: payload.title,
@@ -127,16 +45,6 @@ export class PostService {
       slug: payload.slug,
       author: { id: payload.authorID },
       tags,
-    });
-  }
-
-  async checkIfPostBookmarked(idPost: number) {
-    return await this.BookmarkModel.findOne({
-      where: {
-        post: {
-          id: idPost,
-        },
-      },
     });
   }
 
@@ -149,30 +57,32 @@ export class PostService {
   }
 
   async update(payload: UpdatePostInput) {
-    const post = await this.PostModel.findOneBy({
-      id: payload.id,
-    });
+    const tags = payload.tags
+      ? await this.tagService.getExistedTag(payload.tags)
+      : undefined;
 
-    if (!post) throw new ApolloError('Bad Payload', '400');
-
-    post.title = payload.title || post.title;
-    post.content = payload.content || post.content;
-    post.slug = payload.slug || post.slug;
-    post.tags = await this.TagModel.find({
-      where: { id: In(payload.tags || []) },
-    });
-
-    return await this.PostModel.save(post);
+    try {
+      return await this.PostModel.save({
+        id: payload.id,
+        title: payload.title,
+        content: payload.content,
+        slug: payload.slug || Slugify(payload.title),
+        tags,
+      });
+    } catch (error) {
+      console.log(error);
+      throw new ApolloError('Bad Payload', HttpStatus.BAD_REQUEST.toString());
+    }
   }
 
-  async delete(payload: DeletePostInput) {
+  async delete(payload: GetPostByIdInput) {
     try {
       return await this.PostModel.delete({
         id: payload.id,
       });
     } catch (_) {
       console.log(_);
-      throw new ApolloError('Bad Payload', '400');
+      throw new ApolloError('Bad Payload', HttpStatus.BAD_REQUEST.toString());
     }
   }
 }

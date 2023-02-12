@@ -10,6 +10,8 @@ import { PostModule } from './modules/post/post.module';
 import { PassportGuard } from 'src/guard/passport.guard';
 import { AuthModule } from './modules/auth/auth.module';
 import { TagModule } from './modules/tag/tag.module';
+import { LikeModule } from './modules/like/like.module';
+import { BookmarkModule } from './modules/bookmark/bookmark.module';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { TagModule } from './modules/tag/tag.module';
       debug: false,
       playground: true,
       cors: {
-        origin: 'http://localhost:3000',
+        origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
         credentials: true,
       },
     }),
@@ -41,6 +43,8 @@ import { TagModule } from './modules/tag/tag.module';
     AuthorModule,
     AuthModule,
     TagModule,
+    LikeModule,
+    BookmarkModule,
   ],
   providers: [
     {

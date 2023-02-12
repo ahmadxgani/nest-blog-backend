@@ -78,38 +78,58 @@ export class AuthService {
   }
 
   async resetPassword(payload: ResetPasswordInput) {
-    const author = await this.authorService.readById(payload.authorID);
-    if (!author)
-      throw new ApolloError('Invalid User', HttpStatus.BAD_REQUEST.toString());
-    if (!author.resetPasswordToken)
-      throw new ApolloError('SUS Request detected');
-    if (author.resetPasswordToken !== payload.token)
-      throw new ApolloError('Invalid token', HttpStatus.BAD_REQUEST.toString());
+    try {
+      const author = await this.authorService.readById(payload.authorID);
+      if (!author)
+        throw new ApolloError(
+          'Invalid User',
+          HttpStatus.BAD_REQUEST.toString(),
+        );
+      if (!author.resetPasswordToken)
+        throw new ApolloError('SUS Request detected');
+      if (author.resetPasswordToken !== payload.token)
+        throw new ApolloError(
+          'Invalid token',
+          HttpStatus.BAD_REQUEST.toString(),
+        );
 
-    this.authorService.updatePassword({
-      id: author.id,
-      newPassword: await hashPassword(payload.newPassword),
-      resetPasswordToken: null,
-    });
+      this.authorService.updatePassword({
+        id: author.id,
+        newPassword: await hashPassword(payload.newPassword),
+        resetPasswordToken: null,
+      });
+    } catch (error) {
+      throw new ApolloError(
+        'Failed to reset password: ' + error,
+        HttpStatus.BAD_REQUEST.toString(),
+      );
+    }
   }
 
   async updatePassword(payload: UpdatePasswordInput & { id: number }) {
-    const author = await this.authorService.readById(payload.id);
-    if (!author) throw new ApolloError('Invalid User');
-    const match = await bcrypt.compare(
-      payload.currentPassword,
-      author.password,
-    );
-    if (!match)
-      throw new ApolloError(
-        'wrong password',
-        HttpStatus.UNAUTHORIZED.toString(),
+    try {
+      const author = await this.authorService.readById(payload.id);
+      if (!author) throw new ApolloError('Invalid User');
+      const match = await bcrypt.compare(
+        payload.currentPassword,
+        author.password,
       );
+      if (!match)
+        throw new ApolloError(
+          'wrong password',
+          HttpStatus.UNAUTHORIZED.toString(),
+        );
 
-    return this.authorService.updatePassword({
-      id: author.id,
-      newPassword: payload.newPassword,
-    });
+      return this.authorService.updatePassword({
+        id: author.id,
+        newPassword: payload.newPassword,
+      });
+    } catch (error) {
+      throw new ApolloError(
+        'Failed to update password: ' + error,
+        HttpStatus.BAD_REQUEST.toString(),
+      );
+    }
   }
 
   async login(payload: LoginInput) {
