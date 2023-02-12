@@ -9,7 +9,7 @@ import { Bookmark } from './entities/bookmark.entity';
 export class BookmarkService {
   constructor(
     @InjectRepository(Bookmark)
-    private BookmarkModel: Repository<Bookmark>,
+    private readonly BookmarkModel: Repository<Bookmark>,
   ) {}
 
   async getBookmarkedPost(authorID: number) {

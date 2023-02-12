@@ -14,7 +14,7 @@ import {
 @Injectable()
 export class PostService {
   constructor(
-    @InjectRepository(Post) private PostModel: Repository<Post>,
+    @InjectRepository(Post) private readonly PostModel: Repository<Post>,
     @Inject(TagService) private readonly tagService: TagService,
   ) {}
 

@@ -6,7 +6,9 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class LikeService {
-  constructor(@InjectRepository(Like) private LikeModel: Repository<Like>) {}
+  constructor(
+    @InjectRepository(Like) private readonly LikeModel: Repository<Like>,
+  ) {}
 
   async getLikedPost(postID: number) {
     const result = await this.LikeModel.findBy({

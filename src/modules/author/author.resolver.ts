@@ -16,7 +16,6 @@ import { FileUpload } from 'graphql-upload/processRequest.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import { AuthorId } from 'src/decorator/author.decorator';
 import { Post } from '../post/post.entity';
-import { Tag } from '../tag/tag.entity';
 import { PostService } from '../post/post.service';
 import { BookmarkService } from '../bookmark/bookmark.service';
 import { Bookmark } from '../bookmark/entities/bookmark.entity';

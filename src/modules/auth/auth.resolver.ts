@@ -17,7 +17,7 @@ import ms from 'ms';
 
 @Resolver()
 export class AuthResolver {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Public()
   @Mutation(() => LoginType)

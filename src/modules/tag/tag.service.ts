@@ -8,7 +8,9 @@ import { CreateTagInput, DeleteTagInput, UpdateTagInput } from './tag.input';
 
 @Injectable()
 export class TagService {
-  constructor(@InjectRepository(Tag) private TagModel: Repository<Tag>) {}
+  constructor(
+    @InjectRepository(Tag) private readonly TagModel: Repository<Tag>,
+  ) {}
 
   async getAllTag() {
     return await this.TagModel.find();
