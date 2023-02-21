@@ -5,7 +5,9 @@ import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: ['debug', 'verbose', 'log', 'error', 'warn'],
+  });
   app.use(cookieParser());
   app.use(graphqlUploadExpress());
   await app.listen(8000);

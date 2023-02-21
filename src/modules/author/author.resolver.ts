@@ -63,8 +63,6 @@ export class AuthorResolver {
 
   @ResolveField(() => [Post])
   posts(@Parent() author: Author) {
-    console.log(author);
-
     return this.postService.getPostByAuthor(author.username);
   }
 

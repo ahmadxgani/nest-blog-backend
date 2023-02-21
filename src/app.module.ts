@@ -5,6 +5,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
+
 import { AuthorModule } from './modules/author/author.module';
 import { PostModule } from './modules/post/post.module';
 import { PassportGuard } from 'src/guard/passport.guard';
@@ -12,6 +13,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { TagModule } from './modules/tag/tag.module';
 import { LikeModule } from './modules/like/like.module';
 import { BookmarkModule } from './modules/bookmark/bookmark.module';
+import { ComplexityPlugin } from './util/complexity';
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { BookmarkModule } from './modules/bookmark/bookmark.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      fieldResolverEnhancers: ['guards'],
       sortSchema: true,
       debug: false,
       playground: true,
@@ -51,6 +54,7 @@ import { BookmarkModule } from './modules/bookmark/bookmark.module';
       provide: APP_GUARD,
       useClass: PassportGuard,
     },
+    ComplexityPlugin,
   ],
 })
 export class AppModule {}

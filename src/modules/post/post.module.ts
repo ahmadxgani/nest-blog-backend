@@ -11,7 +11,7 @@ import { TagModule } from '../tag/tag.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Post, Tag]),
+    TypeOrmModule.forFeature([Post]),
     LikeModule,
     forwardRef(() => AuthorModule),
     forwardRef(() => TagModule),

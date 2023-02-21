@@ -1,4 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Extensions, Field, ObjectType } from '@nestjs/graphql';
+import { checkPermission } from 'src/middleware/permission.middleware';
 import {
   Column,
   Entity,
@@ -23,8 +24,9 @@ export class Author {
   @Column({ unique: true })
   username: string;
 
-  @Field()
+  @Field({ middleware: [checkPermission] })
   @Column({ unique: true })
+  @Extensions({ roles: [roles.admin] })
   email: string;
 
   @Field({ nullable: true })

@@ -84,7 +84,7 @@ export class PostResolver {
     return this.tagService.getTagByPost(post.id);
   }
 
-  @ResolveField(() => Author)
+  @ResolveField(() => Author, { complexity: 1 })
   author(@Parent() post: Post) {
     return this.authorService.getAuthor(post.id);
   }
