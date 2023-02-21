@@ -1,5 +1,4 @@
 import { Extensions, Field, ObjectType } from '@nestjs/graphql';
-import { checkPermission } from 'src/middleware/permission.middleware';
 import {
   Column,
   Entity,
@@ -9,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+import { checkPermission } from '../../middleware/permission.middleware';
 import { roles } from '../../interface/role.interface';
 import { Bookmark } from '../bookmark/entities/bookmark.entity';
 import { Post } from '../post/post.entity';

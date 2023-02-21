@@ -1,10 +1,11 @@
-import { GraphQLSchemaHost } from '@nestjs/graphql';
 import { Plugin } from '@nestjs/apollo';
 import {
   ApolloServerPlugin,
-  GraphQLRequestListener,
+  GraphQLServerListener,
+  GraphQLServiceContext,
 } from 'apollo-server-plugin-base';
-import { GraphQLError } from 'graphql';
+import { GraphQLRequestListener } from 'apollo-server-plugin-base/src';
+import { GraphQLError, GraphQLSchema } from 'graphql';
 import {
   fieldExtensionsEstimator,
   getComplexity,
@@ -13,16 +14,21 @@ import {
 
 @Plugin()
 export class ComplexityPlugin implements ApolloServerPlugin {
-  constructor(private gqlSchemaHost: GraphQLSchemaHost) {}
+  private schema: GraphQLSchema;
 
-  async requestDidStart(): Promise<GraphQLRequestListener> {
-    const maxComplexity = 20;
-    const { schema } = this.gqlSchemaHost;
+  async serverWillStart(
+    service: GraphQLServiceContext,
+  ): Promise<GraphQLServerListener | void> {
+    this.schema = service.schema;
+  }
+
+  async requestDidStart(): Promise<GraphQLRequestListener | void> {
+    const maxComplexity = 5;
 
     return {
-      async didResolveOperation({ request, document }) {
+      didResolveOperation: async ({ request, document }) => {
         const complexity = getComplexity({
-          schema,
+          schema: this.schema,
           operationName: request.operationName,
           query: document,
           variables: request.variables,
@@ -31,12 +37,12 @@ export class ComplexityPlugin implements ApolloServerPlugin {
             simpleEstimator({ defaultComplexity: 1 }),
           ],
         });
+
         if (complexity > maxComplexity) {
           throw new GraphQLError(
             `Query is too complex: ${complexity}. Maximum allowed complexity: ${maxComplexity}`,
           );
         }
-        console.log('Query Complexity:', complexity);
       },
     };
   }
