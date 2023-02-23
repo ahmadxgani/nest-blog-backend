@@ -1,7 +1,11 @@
-import { AuthorId as InjectAuthor } from 'src/decorator/author.decorator';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Request } from 'express';
+import ms from 'ms';
+
+import { AuthorId as InjectAuthor } from 'src/decorator/author.decorator';
 import { LoginType, MessageType } from 'src/classType/auth.classType';
 import { Public } from 'src/decorator/public.decorator';
+
 import { Author } from '../author/author.entity';
 import { CreateAuthorInput } from '../author/author.input';
 import {
@@ -12,8 +16,6 @@ import {
   VerifyEmailInput,
 } from './auth.input';
 import { AuthService } from './auth.service';
-import { Request } from 'express';
-import ms from 'ms';
 
 @Resolver()
 export class AuthResolver {
@@ -30,6 +32,8 @@ export class AuthResolver {
       expires: new Date(
         Date.now() + (ms(process.env.EXPIRES_IN as string) as number),
       ),
+      sameSite: 'none',
+      secure: true,
     });
     delete data.token;
     return data;
