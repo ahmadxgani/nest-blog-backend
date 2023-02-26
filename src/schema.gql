@@ -83,10 +83,6 @@ type LoginType {
   username: String!
 }
 
-type MessageType {
-  message: String!
-}
-
 type Mutation {
   bookmarkPost(payload: GetPostByIdInput!): Bookmark!
   createAccount(payload: CreateAuthorInput!): Author!
@@ -97,13 +93,14 @@ type Mutation {
   deleteTag(payload: DeleteTagInput!): ResponseType!
   likePost(payload: GetPostByIdInput!): Like!
   login(payload: LoginInput!): LoginType!
-  resetPassword(payload: ResetPasswordInput!): MessageType!
-  unregisterUser(payload: VerifyEmailInput!): MessageType!
+  logout: ResponseType!
+  resetPassword(payload: ResetPasswordInput!): ResponseType!
+  unregisterUser(payload: VerifyEmailInput!): ResponseType!
   updateAuthor(file: Upload, payload: UpdateAuthorInput!): Author!
-  updatePassword(payload: UpdatePasswordInput!): MessageType!
+  updatePassword(payload: UpdatePasswordInput!): ResponseType!
   updatePost(payload: UpdatePostInput!): Post!
   updateTag(payload: UpdateTagInput!): Tag!
-  verifyEmail(payload: VerifyEmailInput!): MessageType!
+  verifyEmail(payload: VerifyEmailInput!): ResponseType!
 }
 
 """Post model"""
@@ -120,7 +117,7 @@ type Post {
 }
 
 type Query {
-  forgotPassword(payload: ForgotPasswordInput!): MessageType!
+  forgotPassword(payload: ForgotPasswordInput!): ResponseType!
   getAuthorById(payload: GetAuthorIdInput!): Author!
   getPost(payload: GetPostBySlugInput!): Post!
   loggedInAuthor: Author!
@@ -138,7 +135,7 @@ input ResetPasswordInput {
 
 """Return Response Type"""
 type ResponseType {
-  success: Boolean!
+  message: String!
 }
 
 """Tag model"""

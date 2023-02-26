@@ -16,7 +16,7 @@ import {
   GetByTagInput,
   UpdateTagInput,
 } from './tag.input';
-import { ResponseType } from 'src/classType/delete.classType';
+import { ResponseType } from 'src/classType/common.classType';
 import { Post } from '../post/post.entity';
 import { PostService } from '../post/post.service';
 
@@ -60,7 +60,7 @@ export class TagResolver {
   deleteTag(@Args('payload') payload: DeleteTagInput) {
     this.tagService.deleteTag(payload);
     return {
-      success: true,
+      message: 'The item was successfully deleted.',
     };
   }
 

@@ -11,7 +11,7 @@ import { Author } from './author.entity';
 import { AuthorService } from './author.service';
 import { roles } from 'src/interface/role.interface';
 import { Auth } from '../../decorator/auth.decorator';
-import { ResponseType } from 'src/classType/delete.classType';
+import { ResponseType } from 'src/classType/common.classType';
 import { FileUpload } from 'graphql-upload/processRequest.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import { AuthorId } from 'src/decorator/author.decorator';
@@ -57,7 +57,7 @@ export class AuthorResolver {
   deleteAuthor(@Args('payload') payload: GetAuthorIdInput) {
     this.authorService.delete(payload);
     return {
-      success: true,
+      message: 'The item was successfully deleted.',
     };
   }
 

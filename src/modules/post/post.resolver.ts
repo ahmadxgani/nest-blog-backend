@@ -17,7 +17,7 @@ import {
 import { Post } from './post.entity';
 import { PostService } from './post.service';
 import { Public } from 'src/decorator/public.decorator';
-import { ResponseType } from 'src/classType/delete.classType';
+import { ResponseType } from 'src/classType/common.classType';
 import { UseGuards } from '@nestjs/common';
 import { IsOwnedPost } from 'src/guard/isOwnedPost.guard';
 import { Author } from '../author/author.entity';
@@ -75,7 +75,7 @@ export class PostResolver {
   deletePost(@Args('payload') payload: GetPostByIdInput) {
     this.postService.delete(payload);
     return {
-      success: true,
+      message: 'The item was successfully deleted.',
     };
   }
 

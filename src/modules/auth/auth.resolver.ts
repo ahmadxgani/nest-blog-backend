@@ -3,7 +3,7 @@ import { Request } from 'express';
 import ms from 'ms';
 
 import { AuthorId as InjectAuthor } from 'src/decorator/author.decorator';
-import { LoginType, MessageType } from 'src/classType/auth.classType';
+import { LoginType } from 'src/classType/auth.classType';
 import { Public } from 'src/decorator/public.decorator';
 
 import { Author } from '../author/author.entity';
@@ -16,6 +16,7 @@ import {
   VerifyEmailInput,
 } from './auth.input';
 import { AuthService } from './auth.service';
+import { ResponseType } from 'src/classType/common.classType';
 
 @Resolver()
 export class AuthResolver {
@@ -34,9 +35,20 @@ export class AuthResolver {
       ),
       sameSite: 'none',
       secure: true,
+      httpOnly: true,
     });
     delete data.token;
     return data;
+  }
+
+  @Mutation(() => ResponseType)
+  logout(@Context('req') req: Request) {
+    req.res?.cookie('token', 'destroyed', {
+      expires: new Date(0),
+    });
+    return {
+      message: 'The user was successfully logged out.',
+    };
   }
 
   @Public()
@@ -45,7 +57,7 @@ export class AuthResolver {
     return this.authService.create(payload);
   }
 
-  @Mutation(() => MessageType)
+  @Mutation(() => ResponseType)
   @Public()
   verifyEmail(@Args('payload') payload: VerifyEmailInput) {
     this.authService.verifyEmail(payload.code);
@@ -55,7 +67,7 @@ export class AuthResolver {
   }
 
   @Public()
-  @Query(() => MessageType)
+  @Query(() => ResponseType)
   forgotPassword(@Args('payload') payload: ForgotPasswordInput) {
     this.authService.forgotPassword(payload.email);
     return {
@@ -65,7 +77,7 @@ export class AuthResolver {
   }
 
   @Public()
-  @Mutation(() => MessageType)
+  @Mutation(() => ResponseType)
   unregisterUser(@Args('payload') payload: VerifyEmailInput) {
     this.authService.unregisterUser(payload.code);
     return {
@@ -74,7 +86,7 @@ export class AuthResolver {
   }
 
   @Public()
-  @Mutation(() => MessageType)
+  @Mutation(() => ResponseType)
   resetPassword(@Args('payload') payload: ResetPasswordInput) {
     this.authService.resetPassword(payload);
     return {
@@ -82,7 +94,7 @@ export class AuthResolver {
     };
   }
 
-  @Mutation(() => MessageType)
+  @Mutation(() => ResponseType)
   updatePassword(
     @InjectAuthor() authorID: number,
     @Args('payload') payload: UpdatePasswordInput,
