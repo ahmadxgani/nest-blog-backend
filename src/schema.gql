@@ -60,7 +60,7 @@ input GetByTagInput {
 }
 
 input GetPostByIdInput {
-  id: Float!
+  id: Int!
 }
 
 input GetPostBySlugInput {
@@ -161,7 +161,7 @@ input UpdatePasswordInput {
 input UpdatePostInput {
   content: String
   draft: Boolean
-  id: Float!
+  id: Int!
   slug: String
   tags: [String!]
   title: String

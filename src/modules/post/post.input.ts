@@ -4,6 +4,7 @@ import {
   OmitType,
   PartialType,
   IntersectionType,
+  Int,
 } from '@nestjs/graphql';
 
 @InputType()
@@ -37,7 +38,7 @@ export class GetPostInput {
 
 @InputType()
 export class GetPostByIdInput {
-  @Field()
+  @Field(() => Int)
   id: number;
 }
 
