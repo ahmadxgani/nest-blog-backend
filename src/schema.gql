@@ -9,6 +9,7 @@ type Author {
   email: String!
   id: Float!
   image: String
+  name: String!
   posts: [Post!]!
   updatedAt: DateTime!
   username: String!
@@ -22,6 +23,7 @@ type Bookmark {
 
 input CreateAuthorInput {
   email: String!
+  name: String!
   password: String!
   username: String!
 }
@@ -147,6 +149,7 @@ type Tag {
 
 input UpdateAuthorInput {
   id: Int!
+  name: String
   username: String
 }
 

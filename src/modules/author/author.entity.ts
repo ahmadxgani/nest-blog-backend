@@ -24,6 +24,10 @@ export class Author {
   @Column({ unique: true })
   username: string;
 
+  @Field()
+  @Column()
+  name: string;
+
   @Field({ middleware: [checkPermission] })
   @Column({ unique: true })
   @Extensions({ roles: [roles.admin] })

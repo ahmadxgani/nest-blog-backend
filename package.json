@@ -16,7 +16,7 @@
     "typescript"
   ],
   "scripts": {
-    "seed:run": "ts-node ./node_modules/@jorgebodega/typeorm-seeding/dist/cli.js -d datasource.ts seed \"./database/seeder/*.seed.ts\"",
+    "schema:seed": "ts-node ./node_modules/@jorgebodega/typeorm-seeding/dist/cli.js -d datasource.ts seed \"./database/seeder/*.seed.ts\"",
     "schema:drop": "ts-node ./node_modules/typeorm/cli.js schema:drop -d datasource.ts",
     "prebuild": "rimraf dist",
     "build": "nest build",

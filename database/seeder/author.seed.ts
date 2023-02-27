@@ -10,7 +10,8 @@ export default class CreateAuthor extends Seeder {
     const password = await hashPassword('1234');
     const authors = authorRepo.create([
       {
-        username: 'super admin',
+        name: 'super admin',
+        username: 'reyuki',
         email: 'admin@s.com',
         password,
         role: roles.admin,
@@ -18,7 +19,8 @@ export default class CreateAuthor extends Seeder {
         verified: true,
       },
       {
-        username: 'shinigami shinoa',
+        name: 'shinigami shinoa',
+        username: 'shinoa',
         email: 'shinoa@s.com',
         password,
         role: roles.member,
@@ -26,7 +28,8 @@ export default class CreateAuthor extends Seeder {
         verified: true,
       },
       {
-        username: 'kuchiki bocchi',
+        name: 'kuchiki bocchi',
+        username: 'rukia',
         email: 'bochh@s.com',
         password,
         role: roles.member,
@@ -34,7 +37,6 @@ export default class CreateAuthor extends Seeder {
         verified: true,
       },
     ]);
-
     await authorRepo.save(authors);
   }
 }

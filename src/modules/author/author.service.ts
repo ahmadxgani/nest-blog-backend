@@ -35,6 +35,7 @@ export class AuthorService {
     author.email = payload.email;
     author.password = password;
     author.username = payload.username;
+    author.name = payload.name;
     author.verifyCode = verifyCode;
     return this.AuthorModel.save(author);
   }

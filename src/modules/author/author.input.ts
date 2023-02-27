@@ -14,6 +14,9 @@ export class CreateAuthorInput {
   username: string;
 
   @Field()
+  name: string;
+
+  @Field()
   email: string;
 
   @Field()
@@ -28,14 +31,12 @@ export class GetAuthorIdInput {
 
 @InputType()
 export class UpdateAuthorInput extends IntersectionType(
-  PartialType(OmitType(CreateAuthorInput, ['email', 'password'] as const)),
+  PartialType(OmitType(CreateAuthorInput, ['email', 'password'])),
   GetAuthorIdInput,
 ) {}
 
 @InputType()
-export class ChangePasswordInput {
-  @Field(() => Int)
-  id: number;
-  @Field()
-  password: string;
-}
+export class ChangePasswordInput extends IntersectionType(
+  GetAuthorIdInput,
+  PickType(CreateAuthorInput, ['password']),
+) {}
