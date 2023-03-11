@@ -1,4 +1,4 @@
-# Zero's Blog | Server Side
+# My Perosnal website | Server Side
 
 ## Technologies stack:
 
